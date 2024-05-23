@@ -27,6 +27,8 @@
 
 	> The `expr` command in Unix evaluates a given expression and displays its corresponding output.
 
+	See: [Exit Codes](https://www.redhat.com/sysadmin/exit-codes-demystified)
+
 ### Signals
 - `ctrl-C` in an empty prompt should display a new line with a new prompt.
 - `ctrl-\` in an empty prompt should not do anything.
@@ -107,7 +109,7 @@ Repeat multiple times with different commands and arguments and sometimes change
 
 ### History
 - Type a command line, then use `ctrl-C` and press `Enter`. The buffer should be clean and there should be nothing left to execute.
-	- It should be possible to navigate through history using Up and Down.
+	- It should be possible to navigate through history using `Up` and `Down`.
 - minishell should not crash and print an error when commands that should not work like `dsbdghsd` are executed.
 - `cat | cat | ls` should behave in a "normal way".
 - Execute a long command with a ton of arguments.
@@ -125,6 +127,14 @@ Repeat multiple times with different commands and arguments and sometimes change
 
 ### And, Or
 - Use `&&`, `||` and parenthesis with commands and ensure minishell behaves the same way bash does.
+
+> "A ; B" Run A and then B, regardless of success of A
+>
+> "A && B" Run B if A succeeded
+>
+> "A || B" Run B if A failed
+>
+> "A &" Run A in background.
 
 ### Wildcard
 - Use wildcards in arguments in the current working directory.
