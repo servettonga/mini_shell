@@ -1,0 +1,72 @@
+=== Example 1 ===
+prompt > echo 12
+12
+=== Example 2 ===
+prompt > export MYVAR=42
+<no output; create variable>
+prompt > echo $MYVAR
+42
+prompt > echo "$MYVAR"
+42
+prompt > echo '$MYVAR'
+$MYVAR
+=== Example 3 ===
+prompt > echo 1 | echo 2 | echo 3
+3
+=== Example 4 ===
+prompt > echo 1 && echo 2 && echo 3
+1
+2
+3
+=== Example 5 ===
+prompt > echo 1 && qwerty && echo 2 && echo 3  # && operator execute next if previous was success
+1
+qwerty: command not found
+=== Example 6 ===
+prompt > echo 1 || echo 2 || echo 3 # || operator execute next if previous was fail
+1
+=== Example 7 ===
+prompt > qwerty || echo 1 || echo 2 || echo 3
+qwerty: command not found
+1
+=== Example 8 ===
+prompt > qwerty: command not found
+qwerty:: command not found
+=== Example 9 ===
+prompt > ^\
+prompt > ^\echo 42
+42
+prompt > ^C
+prompt > echo 42^C
+prompt > ^D
+<exit the shell>
+=== Example 10 ===
+prompt > exit
+<exit the shell>
+=== Example 11 ===
+prompt > echo 42 > 1.txt
+<create 1.txt if not exists; truncate 1.txt if exists; redirect output to 1.txt>
+prompt > echo 42 >> 1.txt
+<create 1.txt if not exists; redirect output to 1.txt>
+prompt > cat < 2.txt # file 2.txt do not exists
+bash: 1.txt: No such file or directory
+prompt > cat < 1.txt # file 1.txt exists
+<set 1.txt file as standart input; run cat binary>
+prompt > cat
+> 1
+1
+> 2
+2
+> ^D
+prompt > cat << LIMITER # any string can be used as limiter; reads STDIN unless limiter reached
+> 1
+> 2
+> LIMITER
+1
+2
+prompt > cat << LIM
+> 1
+> 2
+> ^D-bash: warning: here-document at line 31 delimited by end-of-file (wanted `LIM')
+1
+2
