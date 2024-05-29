@@ -138,3 +138,11 @@ Repeat multiple times with different commands and arguments and sometimes change
 
 ### Wildcard
 - Use wildcards in arguments in the current working directory.
+
+## 7. Corner cases
+
+### Redirection in the middle of pipeline
+
+### tokens containing "/' but which start/end in the middle of token
+- '123'.txt
+- my_file."$EXT"
