@@ -6,7 +6,7 @@ static char *search_token_end(char *start);
 
 /*
 Similar to `ft_split` function but with original split logic
-For more details check `char *get_token_end(char *start)`
+For more details check `char *search_token_end(char *start)`
 */
 char **split_line(char *line)
 {
@@ -54,6 +54,8 @@ static int count_tokens(char *line)
 
 static char *get_end(char *start)
 {
+    char *end;
+
     if (*line == '|')
     {
         end = line + 1;

@@ -3,8 +3,7 @@
 static void fill_node_with_tokens(t_pipeline *start, char **tokens, int first, int curr);
 
 /*
-Fills pipeline with tokens - copy relevant tokens to node args
-and creates next pipe node if needed.
+Creates node for each command and fills it args with relevand tokens.
 */
 void split_tokens_per_command(t_pipeline *start, char **tokens)
 {
