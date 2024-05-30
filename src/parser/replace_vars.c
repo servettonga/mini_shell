@@ -45,23 +45,34 @@ void replace_vars(t_pipeline *node)
 
 /*
 Validates, whether variable should be replaced by it's value.
-Logic - count number of `'` character before `$` sign;
-	if even - valid, invalid otherwise
+If var is in single quotes - invalid.
 */
-static int validate_var_expansion(char *arg, char *dollar) // FIX - check for " quotes as well
+static int validate_var_expansion(char *arg, char *dollar)
 {
-	int i;
+	char *dq;
+	char *sq;
 
-	i = 0;
-	arg = ft_strchr(arg, '\'');
 	while (arg && arg < dollar)
 	{
-		i++;
-		arg = ft_strchr(arg + 1, '\'');
+    	dq = ft_strchr(arg, '"');
+    	sq = ft_strchr(arg, '\'');
+    	if (sq && sq < dollar)
+    	{
+    	    if (dq && dq < sq)
+    	        arg = ft_strchr(dq + 1, '"');
+    	    else
+    	    {
+                arg = ft_strchr(sq + 1, '\'');
+                if (arg && arg > dollar)
+                    return (0);
+    	    }
+            if (arg)
+                arg++;
+    	}
+    	else
+    	    break ;
 	}
-	if (i % 2 == 0)
-		return (1);
-	return (0);
+	return (1);
 }
 
 /*
