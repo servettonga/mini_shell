@@ -15,39 +15,8 @@ Return:
 	3.3) drop quotations
 	3.4) wildcard
 
-Example:
-Line: <infile1 cmd1 arg1 "arg2 $VARIABLE" --arg3 | cmd2 arg1 > outfile1 || cmd3 '$FOO $BAR'
-Splitted into tokens: 
-	- <infile1
-	- cmd1
-	- arg1
-	- "arg2 $VARIABLE"
-	- --arg3
-	- |
-	- cmd2
-	- arg1
-	- >
-	- outfile1
-	- ||
-	- cmd3
-	- '$FOO $BAR'
-Split tokens by commands:
-	1)
-		<infile1
-		cmd1
-		arg1
-		"arg2 $VARIABLE"
-		--arg3
-	2)
-		|
-		cmd2
-		arg1
-		>
-		outfile1
-	3)
-		cmd3
-		'$FOO $BAR'
-
+Undefined behavior:
+- multiple redirections to the same command, eg. `cmd >1.out >>2.out` or `cmd <1.txt <<LIM`
 */
 t_pipeline *parse(char *line)
 {
@@ -70,9 +39,9 @@ void set_pipeline_parameters(t_pipeline *node)
 	{
 		if (!node->cmd.args || !node->cmd.args[0])
 			break;
-		set_connection_type(node); // TODO implement `void set_connection_type(t_pipeline *node)`
-		set_redirections(node); // TODO implement `void set_redirections(t_pipeline *node)`
-		replace_vars(node); // TODO implement `void replace_vars(t_pipeline *node)`
+		set_connection_type(node);
+		set_redirections(node);
+		replace_vars(node);
 		replace_wildcard(node); // TODO implement `void replace_wildcard(t_pipeline *node)`
 		node = node->next;
 	}
@@ -89,58 +58,34 @@ void set_connection_type(t_pipeline *node)
 	}
 }
 
-void set_redirections(t_pipeline *node)
+void replace_vars(t_pipeline *node)
 {
 	int i;
+	char *start;
+	char *var_value;
+	char *var_name;
+	char *expanded;
 
-	i = 0;
-	while (node->cmd.args[i])
+	i = -1;
+	while (node->cmd.args[++i])
 	{
-		if (node->cmd.args[i][0] == '<')
-		{
-			clean_other_input_type(node, node->cmd.args[i][1] == '<');
-			if (node->cmd.args[i][1] == '<')
-			{
-				node->cmd.is_heredoc = 1;
-				set_redirection_field(node, i, &node->cmd.limiter, 2);
-			}
-			else
-				set_redirection_field(node, i, &node->cmd.infile, 1);
-		}
-		else if (node->cmd.args[i][0] == '>')
-		{
-			if (node->cmd.args[i][1] == '>')
-				node->cmd.outfile_append_mode = 1;
-			set_redirection_field(node, i, &node->cmd.outfile, 1 + node->cmd.outfile_append_mode);
-		}
-		else
-			i++;
+		start = ft_strchr(node->cmd.args[i], '$');
+		if (!start)
+			continue ;
+		if (!validate_var_expansion(node->cmd.args[i], start)) // TODO implement validate_var_expansion;
+			continue ;
+		var_name = get_var_name(start); // TODO implement char *get_var_name(char *dollar);
+		var_value = get_varval(var_name); // TODO implement char *get_varval(char *name);
+		expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value));
+		ft_memcpy(expanded, node->cmd.args[i], node->cmd.args[i] - start);
+		ft_memcpy(expanded + (node->cmd.args[i] - start), var_value, ft_strlen(var_value));
+		ft_memcpy(expanded + (node->cmd.args[i] - start) + ft_strlen(var_value), node->cmd.args[i], ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - (node->cmd.args[i] - start));
+		expanded[ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value)] = 0;
+		free(node->cmd.args[i]);
+		node->cmd.args[i] = expanded;
+		i--;
 	}
 }
 
-void	set_redirection_field(t_pipeline *node, int i, char **str_field, int checked_char)
-{
-	char *arg;
-
-	arg = node->cmd.args[i];
-	if (arg[checked_char] == 0)
-	{
-		*str_field = ft_strdup(node->cmd.args[i + 1]);
-		remove_cmd_arg(node, i + 1);
-	}
-	else
-		*str_field = ft_substr(arg, checked_char, ft_strlen(arg));
-	remove_cmd_arg(node, i);
-}
-
-void clean_other_input_type(t_pipeline *node); // TODO maybe instead of clean set variable which type was last
-
-void remove_cmd_arg(t_pipeline *node, int ind)
-{
-	free(node->cmd.args[ind]);
-	while (node->cmd.args[ind])
-	{
-		node->cmd.args[ind] = node->cmd.args[ind + 1];
-		ind++;
-	}
-}
+char *get_var_name(char *dollar)
+{}

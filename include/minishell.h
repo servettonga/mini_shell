@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -8,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 18:44:13 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/05/29 13:03:45 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/05/30 14:14:38 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +37,18 @@ Fields:
     outfile_append_mode (int) - flag, True if output redirection has to be in append mode;
         ignore if outfile is NULL
 */
+
+typedef enum e_connection {
+    NONE,
+    PIPE,
+    OR,
+    AND
+} t_connection;
+
 typedef struct s_command
 {
     char    **args;
-    char    *connection_type;
+    t_connection connection_type;
     int     is_heredoc;
     char    *limiter;
     char    *infile;
@@ -57,4 +63,3 @@ typedef struct s_pipeline
 }       t_pipeline;
 
 #endif
->>>>>>> Stashed changes
