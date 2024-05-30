@@ -49,43 +49,13 @@ void set_pipeline_parameters(t_pipeline *node)
 
 void set_connection_type(t_pipeline *node)
 {
-	if (ft_memcmp(node->cmd.args[0], "|", 2) 
-		|| ft_memcmp(node->cmd.args[0], "||", 3)
-		|| ft_memcmp(node->cmd.args[0], "&&", 3))
-	{
-		node->cmd.connection_type = ft_strdup(node->cmd.args[0]);
-		remove_cmd_arg(node, 0);
-	}
+	if (ft_memcmp(node->cmd.args[0], "|", 2))
+		node->cmd.connection_type = PIPE;
+	else if (ft_memcmp(node->cmd.args[0], "||", 3))
+		node->cmd.connection_type = OR;
+	else if (ft_memcmp(node->cmd.args[0], "&&", 3))
+		node->cmd.connection_type = AND;
+	else
+		return ;
+	remove_cmd_arg(node, 0);
 }
-
-void replace_vars(t_pipeline *node)
-{
-	int i;
-	char *start;
-	char *var_value;
-	char *var_name;
-	char *expanded;
-
-	i = -1;
-	while (node->cmd.args[++i])
-	{
-		start = ft_strchr(node->cmd.args[i], '$');
-		if (!start)
-			continue ;
-		if (!validate_var_expansion(node->cmd.args[i], start)) // TODO implement validate_var_expansion;
-			continue ;
-		var_name = get_var_name(start); // TODO implement char *get_var_name(char *dollar);
-		var_value = get_varval(var_name); // TODO implement char *get_varval(char *name);
-		expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value));
-		ft_memcpy(expanded, node->cmd.args[i], node->cmd.args[i] - start);
-		ft_memcpy(expanded + (node->cmd.args[i] - start), var_value, ft_strlen(var_value));
-		ft_memcpy(expanded + (node->cmd.args[i] - start) + ft_strlen(var_value), node->cmd.args[i], ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - (node->cmd.args[i] - start));
-		expanded[ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value)] = 0;
-		free(node->cmd.args[i]);
-		node->cmd.args[i] = expanded;
-		i--;
-	}
-}
-
-char *get_var_name(char *dollar)
-{}
