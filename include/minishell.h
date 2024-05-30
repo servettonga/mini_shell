@@ -34,8 +34,7 @@ Fields:
         possible types: "|" - pipe, "&&" - and operator, "||" - or operator, NULL - first command
     is_heredoc (int) - flag, True if input redirection has to be from here_doc
     limiter (char *) - limiter string for here_doc
-    infile (char *) - file name of redirected input source, if should be; NULL otherwise;
-        ignore if is_heredoc set to True
+    infile (char *) - file name of redirected input source, if should be; NULL otherwise
     outfile (char *) - file name of redirected output, if should be; NULL otherwise
     outfile_append_mode (int) - flag, True if output redirection has to be in append mode;
         ignore if outfile is NULL
