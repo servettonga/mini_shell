@@ -53,24 +53,6 @@ int validate_asterisk(char *arg, char *asterisk)
 	return (1);
 }
 
-// int count_dir_obj()
-// {
-// 	char *dirname;
-// 	DIR *dirstream;
-// 	int n_obj;
-	
-// 	dirname = getcwd(NULL, 0);
-// 	dirstream = opendir(dirname);
-// 	free(dirname);
-// 	if (!dirstream)
-// 		return (0);
-// 	n_obj = 0;
-// 	while (readdir(dirstream))
-// 		n_obj++;
-// 	closedir(dirstream);
-// 	return (n_obj);
-// }
-
 t_list *get_args_list(char *arg, char *asterisk)
 {
 	t_list *res;
@@ -110,36 +92,6 @@ void fill_ast_args(char **ast_args, t_list *args_list)
 		i++;
 	}
 }
-
-// void replace_asterisk(char **old_args, int ast_pos, char **ast_args)
-// {
-// 	int i;
-// 	int j;
-// 	char **new_args;
-
-// 	new_args = malloc(sizeof(char *) * (get_split_size(old_args) + get_split_size(ast_args)));
-// 	i = 0;
-// 	j = 0;
-// 	while (old_args[i])
-// 	{
-// 		if (i != ast_args)
-// 			new_args[i + j] = old_args[i];
-// 		else
-// 		{
-// 			while (ast_args[j])
-// 			{
-// 				new_args[i + j] = ast_args[j];
-// 				j++;
-// 			}
-// 			j--;
-// 		}
-// 		i++;
-// 	}
-// 	new_args[i + j] = 0;
-// 	free(old_args[ast_pos]);
-// 	free(old_args);
-// 	free(ast_args);
-// }
 
 void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args)
 {
