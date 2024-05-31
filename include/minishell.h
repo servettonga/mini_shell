@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 18:44:13 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/05/30 14:14:38 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/05/31 08:09:35 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ Fields:
 */
 
 typedef enum e_connection {
-    NONE,
-    PIPE,
-    OR,
-    AND
+    CON_NONE,
+    CON_PIPE,
+    CON_OR,
+    CON_AND
 } t_connection;
 
 typedef struct s_command
@@ -61,5 +61,7 @@ typedef struct s_pipeline
     t_command  cmd;
     t_pipeline *next;
 }       t_pipeline;
+
+void free_split(char **split);
 
 #endif

@@ -7,7 +7,7 @@ t_pipeline *create_defalt_pipeline_node(void)
     res = malloc(sizeof(t_pipeline));
     res->next = NULL;
     res->cmd.args = NULL;
-    res->cmd.connection_type = NONE;
+    res->cmd.connection_type = CON_NONE;
     res->cmd.is_heredoc = 0;
     res->cmd.limiter = NULL;
     res->cmd.infile = NULL;

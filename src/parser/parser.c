@@ -28,7 +28,7 @@ t_pipeline *parse(char *line)
 		return (NULL);
 	res = create_defalt_pipeline_node();
 	split_tokens_per_command(res, tokens);
-	free_split(tokens); // TODO implement `void free_split(char **split)`
+	free_split(tokens);
 	set_pipeline_parameters(res);
 	return (res);
 }
@@ -50,11 +50,11 @@ void set_pipeline_parameters(t_pipeline *node)
 void set_connection_type(t_pipeline *node)
 {
 	if (ft_memcmp(node->cmd.args[0], "|", 2))
-		node->cmd.connection_type = PIPE;
+		node->cmd.connection_type = CON_PIPE;
 	else if (ft_memcmp(node->cmd.args[0], "||", 3))
-		node->cmd.connection_type = OR;
+		node->cmd.connection_type = CON_OR;
 	else if (ft_memcmp(node->cmd.args[0], "&&", 3))
-		node->cmd.connection_type = AND;
+		node->cmd.connection_type = CON_AND;
 	else
 		return ;
 	remove_cmd_arg(node, 0);
