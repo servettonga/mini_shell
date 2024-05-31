@@ -30,7 +30,7 @@ void replace_vars(t_pipeline *node)
 			|| !(ft_isalpha(start[1]) || start[1] == '?'))
 			continue ;
 		var_name = get_var_name(start);
-		var_value = get_varval(var_name); // TODO implement char *get_varval(char *name);
+		var_value = get_varval(var_name);
 		expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value));
 		ft_memcpy(expanded, node->cmd.args[i], start - node->cmd.args[i]);
 		ft_memcpy(expanded + (start - node->cmd.args[i]), var_value, ft_strlen(var_value));
@@ -76,7 +76,7 @@ static int validate_var_expansion(char *arg, char *dollar)
 }
 
 /*
-Returns variable name. Result is dynamocly allocated and should be freed.
+Returns variable name. Result is dynamicly allocated and should be freed.
 Input - pointer on `$` (char before variable name)
 */
 static char *get_var_name(char *dollar)

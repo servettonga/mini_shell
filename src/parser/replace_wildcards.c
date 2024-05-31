@@ -1,72 +1,11 @@
 #include "parser.h"
 
-/*
-Main API for parsing part of the programm
-Arg:
-	line (char *) - prompt text
-Return:
-	Commands pipeline - structure which describes what should be executet
-
-1) Split string into tokens
-2) Interpret tokens and devide them by |, && and || operators to commands
-3) iterrate through commands:
-	3.1) redirections
-	3.2) variables
-	3.3) drop quotations
-	3.4) wildcard
-
-Undefined behavior:
-- multiple redirections to the same command, eg. `cmd >1.out >>2.out` or `cmd <1.txt <<LIM`
-*/
-t_pipeline *parse(char *line)
-{
-	t_pipeline   *res;
-	char		**tokens;
-
-	tokens = split_line(line);
-	if (!tokens)
-		return (NULL);
-	res = create_defalt_pipeline_node();
-	split_tokens_per_command(res, tokens);
-	free_split(tokens);
-	set_pipeline_parameters(res);
-	return (res);
-}
-
-void set_pipeline_parameters(t_pipeline *node)
-{
-	while (node)
-	{
-		if (!node->cmd.args || !node->cmd.args[0])
-			break;
-		set_connection_type(node);
-		set_redirections(node);
-		replace_vars(node);
-		replace_wildcards(node);
-		node = node->next;
-	}
-}
-
-void set_connection_type(t_pipeline *node)
-{
-	if (ft_memcmp(node->cmd.args[0], "|", 2))
-		node->cmd.connection_type = CON_PIPE;
-	else if (ft_memcmp(node->cmd.args[0], "||", 3))
-		node->cmd.connection_type = CON_OR;
-	else if (ft_memcmp(node->cmd.args[0], "&&", 3))
-		node->cmd.connection_type = CON_AND;
-	else
-		return ;
-	remove_cmd_arg(node, 0);
-}
-
 void replace_wildcards(t_pipeline *node)
 {
 	int i;
 	char *asterisk;
-	// int n_obj;
 	t_list *args_list;
-	char **new_args;
+	char **ast_args;
 
 	i = 0;
 	while (node->cmd.args[i])
@@ -74,14 +13,12 @@ void replace_wildcards(t_pipeline *node)
 		asterisk = ft_strchr(node->cmd.args[i], '*');
 		if (asterisk && validate_asterisk(node->cmd.args[i], asterisk))
 		{
-			// n_obj = count_dir_obj();
-			// new_args = malloc(sizeof(char *) * (n_obj + 1));
 			args_list = get_args_list(node->cmd.args[i], asterisk);
 			if (ft_lstsize(args_list))
 			{
-				new_args = malloc(sizeof(char *) * (ft_lstsize(args_list) + 1));
-				fill_new_args(new_args, args_list);
-				replace_asterisk(node->cmd.args, i, new_args);
+				ast_args = malloc(sizeof(char *) * (ft_lstsize(args_list) + 1));
+				fill_ast_args(ast_args, args_list);
+				replace_asterisk(&node->cmd.args, i, ast_args);
 				i += ft_lstsize(args_list) - 1;
 			}
 			ft_lstclear(&args_list, free);
@@ -159,4 +96,68 @@ t_list *get_args_list(char *arg, char *asterisk)
 	}
 	closedir(dirstream);
 	return (res);
+}
+
+void fill_ast_args(char **ast_args, t_list *args_list)
+{
+	int i;
+
+	i = 0;
+	while (args_list)
+	{
+		ast_args[i] = ft_strdup(args_list->content);
+		args_list = args_list->next;
+		i++;
+	}
+}
+
+// void replace_asterisk(char **old_args, int ast_pos, char **ast_args)
+// {
+// 	int i;
+// 	int j;
+// 	char **new_args;
+
+// 	new_args = malloc(sizeof(char *) * (get_split_size(old_args) + get_split_size(ast_args)));
+// 	i = 0;
+// 	j = 0;
+// 	while (old_args[i])
+// 	{
+// 		if (i != ast_args)
+// 			new_args[i + j] = old_args[i];
+// 		else
+// 		{
+// 			while (ast_args[j])
+// 			{
+// 				new_args[i + j] = ast_args[j];
+// 				j++;
+// 			}
+// 			j--;
+// 		}
+// 		i++;
+// 	}
+// 	new_args[i + j] = 0;
+// 	free(old_args[ast_pos]);
+// 	free(old_args);
+// 	free(ast_args);
+// }
+
+void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args)
+{
+    char **old_args;
+	char **new_args;
+	int s_old;
+	int s_ast;
+
+    old_args = *old_args_p;
+	s_old = get_split_size(old_args);
+	s_ast = get_split_size(ast_args);
+	new_args = malloc(sizeof(char *) * (s_old + s_ast));
+	ft_memcpy(new_args, old_args, sizeof(char *) * ast_pos);
+	ft_memcpy(new_args + ast_pos, ast_args, sizeof(char *) * s_ast);
+	ft_memcpy(new_args + ast_pos + s_ast, old_args + ast_pos + 1, sizeof(char *) * s_old - ast_pos - 1);
+	new_args[s_old + s_ast - 1] = NULL;
+	free(old_args[ast_pos]);
+	free(old_args);
+	free(ast_args);
+    *old_args_p = new_args;
 }
