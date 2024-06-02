@@ -1,6 +1,6 @@
 #include "parser.h"
 
-static void set_pipeline_parameters(t_pipeline *node);
+static void set_pipeline_parameters(t_pipeline *node, t_env *env);
 static void set_connection_type(t_pipeline *node);
 static void drop_outside_quotation(t_pipeline *node);
 
@@ -8,6 +8,7 @@ static void drop_outside_quotation(t_pipeline *node);
 Main API for parsing part of the programm
 Arg:
 	line (char *) - prompt text
+	env (t_env *) - structure which represent env vars
 Return:
 	Commands pipeline - structure which describes what should be executet
 
@@ -22,7 +23,7 @@ Return:
 Undefined behavior:
 - multiple redirections to the same command, eg. `cmd >1.out >>2.out` or `cmd <1.txt <<LIM`
 */
-t_pipeline *parse(char *line)
+t_pipeline *parse(char *line, t_env *env)
 {
 	t_pipeline   *res;
 	char		**tokens;
@@ -33,11 +34,11 @@ t_pipeline *parse(char *line)
 		return (NULL);
 	split_tokens_per_command(res, tokens);
 	free_split(tokens);
-	set_pipeline_parameters(res);
+	set_pipeline_parameters(res, env);
 	return (res);
 }
 
-static void set_pipeline_parameters(t_pipeline *node)
+static void set_pipeline_parameters(t_pipeline *node, t_env *env)
 {
 	while (node)
 	{
@@ -45,7 +46,7 @@ static void set_pipeline_parameters(t_pipeline *node)
 			break;
 		set_connection_type(node);
 		set_redirections(node);
-		replace_vars(node);
+		replace_vars(node, env);
 		replace_wildcards(node);
 		drop_outside_quotation(node);
 		node = node->next;

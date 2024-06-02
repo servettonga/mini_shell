@@ -1,19 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 12:13:29 by dmoroz            #+#    #+#             */
-/*   Updated: 2024/06/02 17:34:58 by sehosaf          ###   ########.fr       */
+/*   Created: 2024/06/12 10:31:08 by sehosaf           #+#    #+#             */
+/*   Updated: 2024/06/12 10:32:08 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_front(t_list **lst, t_list *new_lst)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	new_lst->next = (*lst);
-	*lst = new_lst;
+	while (*s1 != '\0' && *s2 != '\0' && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
