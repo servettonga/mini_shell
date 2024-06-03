@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_env.c                                          :+:      :+:    :+:   */
+/*   cmd_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 20:21:32 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/03 19:06:46 by sehosaf          ###   ########.fr       */
+/*   Created: 2024/06/03 19:11:53 by sehosaf           #+#    #+#             */
+/*   Updated: 2024/06/03 19:16:32 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <errno.h>
+#include <stdio.h>
 
 // TODO: structure suggestion for environment variables
 typedef struct s_env
@@ -27,23 +29,33 @@ typedef struct s_shell
 }	t_shell;
 
 /**
- * @brief The `env` command prints the environment variables.
- * @details The variable environ points to an array of pointers to strings called
- * the "environment". The last pointer in this array has the value NULL.
- * @ref https://linux.die.net/man/7/environ
+ * @brief The `unset` command deletes the environment variables.
  * @param shell The shell structure.
- */
-int	cmd_env(t_shell *shell)
+ * @param key The key of the environment variable to delete.
+*/
+void	cmd_unset(t_shell *shell, char *key)
 {
-	t_env	*env;
+	t_env	*prev;
+	t_env	*current;
 
-	env = shell->env;
-	while (env)
+	current = shell->env;
+	prev = NULL;
+	while (current != NULL)
 	{
-		ft_putstr_fd(env->key, STDOUT_FILENO);
-		ft_putchar_fd('=', STDOUT_FILENO);
-		ft_putendl_fd(env->value, STDOUT_FILENO);
-		env = env->next;
+		if (strcmp(current->key, key) == 0)
+		{
+			if (prev == NULL)
+				shell->env = current->next;
+			else
+				prev->next = current->next;
+			free(current->key);
+			free(current->value);
+			free(current);
+			printf("Deleted %s\n", key);
+			return ;
+		}
+		prev = current;
+		current = current->next;
 	}
-	return (EXIT_SUCCESS);
+	printf("unset: %s: not found\n", key);
 }
