@@ -53,11 +53,11 @@ static void set_pipeline_parameters(t_pipeline *node)
 
 static void set_connection_type(t_pipeline *node)
 {
-	if (ft_memcmp(node->cmd.args[0], "|", 2))
+	if (!ft_memcmp(node->cmd.args[0], "|", 2))
 		node->cmd.connection_type = CON_PIPE;
-	else if (ft_memcmp(node->cmd.args[0], "||", 3))
+	else if (!ft_memcmp(node->cmd.args[0], "||", 3))
 		node->cmd.connection_type = CON_OR;
-	else if (ft_memcmp(node->cmd.args[0], "&&", 3))
+	else if (!ft_memcmp(node->cmd.args[0], "&&", 3))
 		node->cmd.connection_type = CON_AND;
 	else
 		return ;

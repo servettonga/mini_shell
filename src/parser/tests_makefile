@@ -10,7 +10,7 @@ LIBFT = $(addprefix $(LIBFT_DIR)/, $(LIBFT_NAME))
 INC_DIR = ../../include
 
 NAME = run_parser_tests
-SRCS = parser_tests.c \
+SRCS = test_parser.c \
 		create_defalt_pipeline_node.c \
 		parser.c \
 		remove_cmd_arg.c \

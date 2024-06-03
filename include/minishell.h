@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 18:44:13 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/03 10:38:49 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:12:15 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ typedef struct s_pipeline
     t_command  cmd;
     struct s_pipeline *next;
 }       t_pipeline;
+
+t_pipeline *parse(char *line);
 
 // utils
 char *get_varval(char *name); // TODO implement in env section

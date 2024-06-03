@@ -61,7 +61,7 @@ static char *get_end(char *line)
         if (line[1] == '|')
             end = line + 2;
     }
-    else if (ft_memcmp(line, "&&", 2))
+    else if (!ft_memcmp(line, "&&", 2))
         end = line + 2;
     else
         end = search_token_end(line);
@@ -95,7 +95,7 @@ static char *search_token_end(char *start)
         return ft_strchr(start + 1, '\0');
     }
     if (ft_isspace(*start) || *start == '\0' || *start == '|'
-        || ft_memcmp(start, "&&", 2))
+        || !ft_memcmp(start, "&&", 2))
         return start;
     return (search_token_end(start + 1)); 
 }

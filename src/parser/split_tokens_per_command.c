@@ -14,12 +14,13 @@ void split_tokens_per_command(t_pipeline *start, char **tokens)
     curr = 0;
     while (tokens[curr])
     {
-        if (ft_memcmp(tokens[curr], "|", 2) || ft_memcmp(tokens[curr], "||", 3)
-            || ft_memcmp(tokens[curr], "&&", 3))
+        if (!ft_memcmp(tokens[curr], "|", 2)
+            || !ft_memcmp(tokens[curr], "||", 3)
+            || !ft_memcmp(tokens[curr], "&&", 3))
         {
             fill_node_with_tokens(start, tokens, first, curr);
-            start = start->next;
             start->next = create_defalt_pipeline_node();
+            start = start->next;
             first = curr;
         }
         curr++;

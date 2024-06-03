@@ -19,4 +19,4 @@ Parsing steps:
 
 ### Notes
 
-- section contains tests (parser_tests.c, tests_makefile); these files should be ditched in 42 repo
+- section contains tests (test_parser.c, tests_makefile); these files should be ditched in 42 repo
