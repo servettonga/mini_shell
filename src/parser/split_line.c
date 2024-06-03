@@ -22,7 +22,7 @@ char **split_line(char *line)
     w = 0;
     while (*line)
     {
-        while (ft_is_space(*line))
+        while (ft_isspace(*line))
             line++;
         if (!*line)
             break;
@@ -37,12 +37,11 @@ char **split_line(char *line)
 static int count_tokens(char *line)
 {
     int counter;
-    char *end;
 
     counter = 0;
     while (*line)
     {
-        while (ft_is_space(*line))
+        while (ft_isspace(*line))
             line++;
         if (!*line)
             break;
@@ -52,7 +51,7 @@ static int count_tokens(char *line)
     return (counter);
 }
 
-static char *get_end(char *start)
+static char *get_end(char *line)
 {
     char *end;
 
@@ -95,7 +94,7 @@ static char *search_token_end(char *start)
             return (search_token_end(end + 1));
         return ft_strchr(start + 1, '\0');
     }
-    if (ft_is_space(*start) || *start == '\0' || *start == '|'
+    if (ft_isspace(*start) || *start == '\0' || *start == '|'
         || ft_memcmp(start, "&&", 2))
         return start;
     return (search_token_end(start + 1)); 

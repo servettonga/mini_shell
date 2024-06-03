@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 18:44:13 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/05/31 11:24:04 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/06/03 10:38:49 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,28 +60,13 @@ typedef struct s_command
 typedef struct s_pipeline
 {
     t_command  cmd;
-    t_pipeline *next;
+    struct s_pipeline *next;
 }       t_pipeline;
 
+// utils
 char *get_varval(char *name); // TODO implement in env section
 void free_split(char **split);
 int get_split_size(char **split);
-
-// TO DROP
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}
-t_list				*ft_lstnew(void *content);
-void				ft_lstadd_front(t_list **lst, t_list *new);
-int					ft_lstsize(t_list *lst);
-t_list				*ft_lstlast(t_list *lst);
-void				ft_lstadd_back(t_list **lst, t_list *new);
-void				ft_lstdelone(t_list *lst, void (*del)(void *));
-void				ft_lstclear(t_list **lst, void (*del)(void *));
-void				ft_lstiter(t_list *lst, void (*f)(void *));
-t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
-						void (*del)(void *));
+int	ft_isspace(int c);
 
 #endif

@@ -1,5 +1,8 @@
 #include "parser.h"
 
+static void set_pipeline_parameters(t_pipeline *node);
+static void set_connection_type(t_pipeline *node);
+
 /*
 Main API for parsing part of the programm
 Arg:
@@ -12,8 +15,8 @@ Return:
 3) iterrate through commands:
 	3.1) redirections
 	3.2) variables
-	3.3) drop quotations
-	3.4) wildcard
+	3.3) wildcard
+	3.4) drop quotation markss
 
 Undefined behavior:
 - multiple redirections to the same command, eg. `cmd >1.out >>2.out` or `cmd <1.txt <<LIM`
@@ -33,7 +36,7 @@ t_pipeline *parse(char *line)
 	return (res);
 }
 
-void set_pipeline_parameters(t_pipeline *node)
+static void set_pipeline_parameters(t_pipeline *node)
 {
 	while (node)
 	{
@@ -43,11 +46,12 @@ void set_pipeline_parameters(t_pipeline *node)
 		set_redirections(node);
 		replace_vars(node);
 		replace_wildcards(node);
+		// drop_outside_quotation(node); // TODO implement
 		node = node->next;
 	}
 }
 
-void set_connection_type(t_pipeline *node)
+static void set_connection_type(t_pipeline *node)
 {
 	if (ft_memcmp(node->cmd.args[0], "|", 2))
 		node->cmd.connection_type = CON_PIPE;

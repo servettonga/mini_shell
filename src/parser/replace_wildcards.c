@@ -1,5 +1,10 @@
 #include "parser.h"
 
+static int validate_asterisk(char *arg, char *asterisk);
+static t_list *get_args_list(char *arg, char *asterisk);
+static void fill_ast_args(char **ast_args, t_list *args_list);
+static void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args);
+
 void replace_wildcards(t_pipeline *node)
 {
 	int i;
@@ -31,7 +36,7 @@ void replace_wildcards(t_pipeline *node)
 Simple validation of asterisk.
 Valid only if out of any type of quotes.
 */
-int validate_asterisk(char *arg, char *asterisk)
+static int validate_asterisk(char *arg, char *asterisk)
 {
 	int sq;
 	int dq;
@@ -53,7 +58,7 @@ int validate_asterisk(char *arg, char *asterisk)
 	return (1);
 }
 
-t_list *get_args_list(char *arg, char *asterisk)
+static t_list *get_args_list(char *arg, char *asterisk)
 {
 	t_list *res;
 	char *dirname;
@@ -69,7 +74,7 @@ t_list *get_args_list(char *arg, char *asterisk)
 	_dirent = readdir(dirstream);
 	while (_dirent)
 	{
-		if (arg - asterisk <= ft_strlen(_dirent->d_name)
+		if ((size_t)(arg - asterisk) <= ft_strlen(_dirent->d_name)
 			&& !ft_memcmp(_dirent->d_name, arg, arg - asterisk)
 			&& ft_strlen(asterisk + 1) <= ft_strlen(_dirent->d_name)
 			&& !ft_memcmp(_dirent->d_name + ft_strlen(_dirent->d_name) - ft_strlen(asterisk + 1), asterisk + 1, ft_strlen(asterisk + 1)))
@@ -80,7 +85,7 @@ t_list *get_args_list(char *arg, char *asterisk)
 	return (res);
 }
 
-void fill_ast_args(char **ast_args, t_list *args_list)
+static void fill_ast_args(char **ast_args, t_list *args_list)
 {
 	int i;
 
@@ -93,7 +98,7 @@ void fill_ast_args(char **ast_args, t_list *args_list)
 	}
 }
 
-void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args)
+static void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args)
 {
     char **old_args;
 	char **new_args;
