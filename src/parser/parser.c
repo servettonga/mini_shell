@@ -28,9 +28,9 @@ t_pipeline *parse(char *line)
 	char		**tokens;
 
 	tokens = split_line(line);
-	if (!tokens)
-		return (NULL);
 	res = create_defalt_pipeline_node();
+	if (!tokens || !res)
+		return (NULL);
 	split_tokens_per_command(res, tokens);
 	free_split(tokens);
 	set_pipeline_parameters(res);

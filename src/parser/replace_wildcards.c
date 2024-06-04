@@ -113,12 +113,15 @@ static void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args)
 	s_old = get_split_size(old_args);
 	s_ast = get_split_size(ast_args);
 	new_args = malloc(sizeof(char *) * (s_old + s_ast));
-	ft_memcpy(new_args, old_args, sizeof(char *) * ast_pos);
-	ft_memcpy(new_args + ast_pos, ast_args, sizeof(char *) * s_ast);
-	ft_memcpy(new_args + ast_pos + s_ast, old_args + ast_pos + 1, sizeof(char *) * (s_old - ast_pos - 1));
-	new_args[s_old + s_ast - 1] = NULL;
-	free(old_args[ast_pos]);
-	free(old_args);
+	if (new_args)
+	{
+		ft_memcpy(new_args, old_args, sizeof(char *) * ast_pos);
+		ft_memcpy(new_args + ast_pos, ast_args, sizeof(char *) * s_ast);
+		ft_memcpy(new_args + ast_pos + s_ast, old_args + ast_pos + 1, sizeof(char *) * (s_old - ast_pos - 1));
+		new_args[s_old + s_ast - 1] = NULL;
+		free(old_args[ast_pos]);
+		free(old_args);
+		*old_args_p = new_args;
+	}
 	free(ast_args);
-    *old_args_p = new_args;
 }

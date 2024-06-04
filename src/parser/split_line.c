@@ -19,6 +19,8 @@ char **split_line(char *line)
     if (!n_tokens)
         return (NULL);
     res = malloc((n_tokens + 1) * sizeof(char *));
+    if (!res)
+        return (NULL);
     w = 0;
     while (*line)
     {

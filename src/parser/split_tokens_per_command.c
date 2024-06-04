@@ -33,6 +33,8 @@ static void fill_node_with_tokens(t_pipeline *start, char **tokens, int first, i
     int i;
 
     start->cmd.args = malloc((curr - first + 1) * sizeof(char *));
+    if (!start->cmd.args)
+        return ;
     i = 0;
     while (i < curr - first)
     {
