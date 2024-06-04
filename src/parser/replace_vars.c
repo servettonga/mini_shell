@@ -31,11 +31,11 @@ void replace_vars(t_pipeline *node)
 			continue ;
 		var_name = get_var_name(start);
 		var_value = get_varval(var_name);
-		expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value));
+		expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - 1 + ft_strlen(var_value) + 1);
 		ft_memcpy(expanded, node->cmd.args[i], start - node->cmd.args[i]);
 		ft_memcpy(expanded + (start - node->cmd.args[i]), var_value, ft_strlen(var_value));
 		ft_memcpy(expanded + (start - node->cmd.args[i]) + ft_strlen(var_value), start + strlen(var_name) + 1, ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - (start - node->cmd.args[i]) - 1);
-		expanded[ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value)] = 0;
+		expanded[ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value) - 1] = 0;
 		free(node->cmd.args[i]);
 		free(var_name);
 		node->cmd.args[i] = expanded;

@@ -22,9 +22,12 @@ void replace_wildcards(t_pipeline *node)
 			if (ft_lstsize(args_list))
 			{
 				ast_args = malloc(sizeof(char *) * (ft_lstsize(args_list) + 1));
-				fill_ast_args(ast_args, args_list);
-				replace_asterisk(&node->cmd.args, i, ast_args);
-				i += ft_lstsize(args_list) - 1;
+				if (ast_args)
+				{
+					fill_ast_args(ast_args, args_list);
+					replace_asterisk(&node->cmd.args, i, ast_args);
+					i += ft_lstsize(args_list) - 1;
+				}
 			}
 			ft_lstclear(&args_list, free);
 		}
@@ -53,7 +56,7 @@ static int validate_asterisk(char *arg, char *asterisk)
 			dq++;
 		i++;
 	}
-	if (!(sq % 2) || !(dq % 2))
+	if ((sq % 2) || (dq % 2))
 		return (0);
 	return (1);
 }
@@ -74,8 +77,8 @@ static t_list *get_args_list(char *arg, char *asterisk)
 	_dirent = readdir(dirstream);
 	while (_dirent)
 	{
-		if ((size_t)(arg - asterisk) <= ft_strlen(_dirent->d_name)
-			&& !ft_memcmp(_dirent->d_name, arg, arg - asterisk)
+		if ((size_t)(asterisk - arg) <= ft_strlen(_dirent->d_name)
+			&& !ft_memcmp(_dirent->d_name, arg, asterisk - arg)
 			&& ft_strlen(asterisk + 1) <= ft_strlen(_dirent->d_name)
 			&& !ft_memcmp(_dirent->d_name + ft_strlen(_dirent->d_name) - ft_strlen(asterisk + 1), asterisk + 1, ft_strlen(asterisk + 1)))
 			ft_lstadd_back(&res, ft_lstnew(ft_strdup(_dirent->d_name)));
@@ -96,6 +99,7 @@ static void fill_ast_args(char **ast_args, t_list *args_list)
 		args_list = args_list->next;
 		i++;
 	}
+	ast_args[i] = NULL;
 }
 
 static void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args)
@@ -111,7 +115,7 @@ static void replace_asterisk(char ***old_args_p, int ast_pos, char **ast_args)
 	new_args = malloc(sizeof(char *) * (s_old + s_ast));
 	ft_memcpy(new_args, old_args, sizeof(char *) * ast_pos);
 	ft_memcpy(new_args + ast_pos, ast_args, sizeof(char *) * s_ast);
-	ft_memcpy(new_args + ast_pos + s_ast, old_args + ast_pos + 1, sizeof(char *) * s_old - ast_pos - 1);
+	ft_memcpy(new_args + ast_pos + s_ast, old_args + ast_pos + 1, sizeof(char *) * (s_old - ast_pos - 1));
 	new_args[s_old + s_ast - 1] = NULL;
 	free(old_args[ast_pos]);
 	free(old_args);

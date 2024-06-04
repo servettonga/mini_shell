@@ -2,6 +2,10 @@
 
 static void	set_redirection_field(t_pipeline *node, int i, char **str_field, int checked_char);
 
+/*
+Finds tokens which define redirection, set respective t_command values and drop such tokens.
+Designed to work with cases where there is only one type of in and out redirections.
+*/
 void set_redirections(t_pipeline *node)
 {
 	int i;
