@@ -41,6 +41,7 @@ void cmdcmp(t_command c1, t_command c2, int n)
 /*
 ** Test cases
 */
+// Base case
 void test_case_1()
 {
     char *line = "ls -l | grep -e .c | wc -l";
@@ -69,20 +70,21 @@ void test_case_1()
         printf("E 4.0\n"); exit(1);}
 }
 
+// Redirections and connection types
 void test_case_2()
 {
-    char *line = "<out1 ls && grep 1 >infile || << LIM >> outfile wc -l";
+    char *line = "<infile ls && grep 1 >outfile || << LIM >> outfile wc -l";
     t_pipeline *res = parse(line);
     // 0
     char *cmd0_args[] = {"ls", NULL};
-    t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, NULL, "out1", 0};
+    t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, "infile", NULL, 0};
     cmdcmp(res->cmd, cmd0, 0);
     // 1
     res = res->next;
     if (!res){
         printf("E 1.0\n"); exit(1);}
     char *cmd1_args[] = {"grep", "1", NULL};
-    t_command cmd1 = {cmd1_args, CON_AND, 0, NULL, "infile", NULL, 0};
+    t_command cmd1 = {cmd1_args, CON_AND, 0, NULL, NULL, "outfile", 0};
     cmdcmp(res->cmd, cmd1, 1);
     // 2
     res = res->next;
@@ -97,10 +99,27 @@ void test_case_2()
         printf("E 4.0\n"); exit(1);}
 }
 
+// variables
+void test_case_3()
+{
+    char *line = "echo $VAR $? \"$?\" '$?' '\"$?\"' \"'$?'\"";
+    t_pipeline *res = parse(line);
+    // 0
+    char *cmd0_args[] = {"echo", "my_var_val", "my_var_val", "my_var_val", "$?", "\"$?\"", "'my_var_val'", NULL};
+    t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, NULL, NULL, 0};
+    cmdcmp(res->cmd, cmd0, 0);
+    // 1
+    res = res->next;
+    if (res){
+        printf("E 1.0\n"); exit(1);}
+}
+
 int main()
 {
     printf("Runnung test 1...\n");
     test_case_1();
     printf("Runnung test 2...\n");
     test_case_2();
+    printf("Runnung test 3...\n");
+    test_case_3();
 }
