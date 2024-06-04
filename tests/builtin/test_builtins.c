@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:12:16 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/04 08:59:07 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/04 12:27:08 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "../../src/builtin/cmd_echo.c"
-#include "../../src/builtin/cmd_pwd.c"
-#include "../../src/builtin/cmd_env.c"
-#include "../../src/builtin/cmd_unset.c"
-#include "../../src/env/init_env.c"
-
-static void free_env(t_env *env)
-{
-    t_env *tmp;
-
-    while (env)
-    {
-        tmp = env;
-        env = env->next;
-        free(tmp->key);
-        free(tmp->value);
-        free(tmp);
-    }
-}
+#include "minishell.h"
 
 static void	test_cmd_pwd(void)
 {

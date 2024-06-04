@@ -90,5 +90,22 @@ typedef struct s_shell
 	char	*cwd;
 }	t_shell;
 
+//		** builtin functions **
+int		cmd_echo(const char **args);
+int		cmd_pwd(t_shell *shell);
+int		cmd_env(t_shell *shell);
+int		cmd_unset(t_shell *shell, const char *key);
+int		cmd_export(t_shell *shell, const char *key_value);
+
+//		** environment functions **
+int		init_environment(t_shell *shell);
+char	**split_key_value(const char *str, char c);
+t_env	*create_env_node(char **key_value);
+char	*get_env_val(t_env *env, const char *key);
+int		set_env_var(t_env *env, const char *key, const char *value);
+t_env	*get_env_node(t_env *env, const char *key);
+t_env	*get_last_node(t_env *env);
+void	free_env(t_env *env);
+
 #endif
 

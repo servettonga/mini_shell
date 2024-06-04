@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 13:23:46 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/03 21:22:50 by sehosaf          ###   ########.fr       */
+/*   Created: 2024/06/04 09:01:52 by sehosaf           #+#    #+#             */
+/*   Updated: 2024/06/04 09:02:30 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,28 @@ static char	*concat_and_free_old(char *old_str, const char *str_to_add)
 
 	new_str = ft_strjoin(old_str, str_to_add);
 	free(old_str);
-    return (new_str);
+	return (new_str);
 }
 
 static char	*concat_args(const char **args, bool n_flag)
 {
-    int	i;
+	char	*output;
+	int		i;
 
-    i = 1;
-    if (n_flag)
-        i++;
-    char *output = ft_strdup("");
-    while (args[i])
-    {
-        output = concat_and_free_old(output, args[i]);
-        if (args[i + 1])
-            output = concat_and_free_old(output, " ");
+	i = 1;
+	if (n_flag)
 		i++;
-    }
-    if (!n_flag)
-        output = concat_and_free_old(output, "\n");
-    return (output);
+	output = ft_strdup("");
+	while (args[i])
+	{
+		output = concat_and_free_old(output, args[i]);
+		if (args[i + 1])
+			output = concat_and_free_old(output, " ");
+		i++;
+	}
+	if (!n_flag)
+		output = concat_and_free_old(output, "\n");
+	return (output);
 }
 
 /**
