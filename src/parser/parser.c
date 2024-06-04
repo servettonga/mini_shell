@@ -2,6 +2,7 @@
 
 static void set_pipeline_parameters(t_pipeline *node);
 static void set_connection_type(t_pipeline *node);
+static void drop_outside_quotation(t_pipeline *node);
 
 /*
 Main API for parsing part of the programm
@@ -46,7 +47,7 @@ static void set_pipeline_parameters(t_pipeline *node)
 		set_redirections(node);
 		replace_vars(node);
 		replace_wildcards(node);
-		// drop_outside_quotation(node); // TODO implement
+		drop_outside_quotation(node);
 		node = node->next;
 	}
 }
@@ -62,4 +63,33 @@ static void set_connection_type(t_pipeline *node)
 	else
 		return ;
 	remove_cmd_arg(node, 0);
+}
+
+static void drop_outside_quotation(t_pipeline *node)
+{
+	int i;
+	int j;
+	char *end;
+	char *tmp;
+
+	i = 0;
+	while (node->cmd.args[i])
+	{
+		j = 0;
+		while (node->cmd.args[i][j])
+		{
+			tmp = node->cmd.args[i] + j;
+			if (ft_strchr("'\"", *tmp))
+			{
+				end = ft_strchr(tmp + 1, *tmp);
+				if (!end)
+					break ;
+				ft_memmove(tmp, tmp + 1, end - tmp - 1);
+				ft_memmove(end - 1, end + 1, ft_strlen(end + 1) + 1);
+				j = (end - node->cmd.args[i]) - 2;
+			}
+			j++;
+		}
+		i++;
+	}
 }
