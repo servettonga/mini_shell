@@ -24,6 +24,11 @@
 # include <bits/waitflags.h>
 # include <signal.h>
 # include <dirent.h>
+# include <errno.h>
+# include <stdbool.h>
+# include "libft.h"
+
+# define PATH_MAX 4096
 
 /*
 t_command struct represent command which has to be executet
@@ -71,4 +76,19 @@ void free_split(char **split);
 int get_split_size(char **split);
 int	ft_isspace(int c);
 
+// TODO: structure suggestion for environment variables
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
+typedef struct s_shell
+{
+	t_env	*env;
+	char	*cwd;
+}	t_shell;
+
 #endif
+

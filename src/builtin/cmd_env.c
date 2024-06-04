@@ -6,25 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 20:21:32 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/03 19:06:46 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/03 20:14:03 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-// TODO: structure suggestion for environment variables
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
-
-typedef struct s_shell
-{
-	t_env	*env;
-	char	*cwd;
-}	t_shell;
+#include "minishell.h"
 
 /**
  * @brief The `env` command prints the environment variables.
@@ -38,6 +24,8 @@ int	cmd_env(t_shell *shell)
 	t_env	*env;
 
 	env = shell->env;
+	if (env == NULL)
+		return (EXIT_FAILURE);
 	while (env)
 	{
 		ft_putstr_fd(env->key, STDOUT_FILENO);

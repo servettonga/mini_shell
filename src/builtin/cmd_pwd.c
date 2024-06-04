@@ -6,25 +6,27 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:08:08 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/02 15:10:32 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/04 08:57:50 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
 /**
  * @brief The `pwd` command writes the absolute pathname of the current working
  * directory to the standard output.
+ * @param shell The shell structure.
  */
-int	cmd_pwd(void)
+int	cmd_pwd(t_shell *shell)
 {
-	char	buf[1024];
-
-	if (getcwd(buf, sizeof(buf)) == NULL)
+	if (shell->cwd == NULL || (shell->cwd && shell->cwd[0] == '\0'))
 	{
-		perror("pwd");
-		return (EXIT_FAILURE);
+		shell->cwd = (char *)malloc(PATH_MAX);
+		if (shell->cwd == NULL)
+			return (perror("pwd"), EXIT_FAILURE);
+		if (getcwd(shell->cwd, PATH_MAX) == NULL)
+			return (perror("pwd"), EXIT_FAILURE);
 	}
-	ft_putendl_fd(buf, STDOUT_FILENO);
+	ft_putendl_fd(shell->cwd, STDOUT_FILENO);
 	return (EXIT_SUCCESS);
 }

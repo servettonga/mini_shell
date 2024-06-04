@@ -6,27 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:11:53 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/03 19:16:32 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/03 20:10:40 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <errno.h>
-#include <stdio.h>
-
-// TODO: structure suggestion for environment variables
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
-
-typedef struct s_shell
-{
-	t_env	*env;
-	char	*cwd;
-}	t_shell;
+#include "minishell.h"
 
 /**
  * @brief The `unset` command deletes the environment variables.

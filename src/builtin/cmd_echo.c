@@ -6,35 +6,39 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:23:46 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/02 13:27:02 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/03 21:22:50 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdbool.h>
+#include "minishell.h"
+
+static char	*concat_and_free_old(char *old_str, const char *str_to_add)
+{
+	char	*new_str;
+
+	new_str = ft_strjoin(old_str, str_to_add);
+	free(old_str);
+    return (new_str);
+}
 
 static char	*concat_args(const char **args, bool n_flag)
 {
-	char	*output;
-	char	*temp;
-	int		i;
+    int	i;
 
-	i = 1;
-	if (n_flag)
+    i = 1;
+    if (n_flag)
+        i++;
+    char *output = ft_strdup("");
+    while (args[i])
+    {
+        output = concat_and_free_old(output, args[i]);
+        if (args[i + 1])
+            output = concat_and_free_old(output, " ");
 		i++;
-	output = ft_strdup("");
-	while (args[i])
-	{
-		temp = ft_strjoin(output, args[i]);
-		free(output);
-		output = temp;
-		if (args[i + 1])
-			output = ft_strjoin(output, " ");
-		i++;
-	}
-	if (!n_flag)
-		output = ft_strjoin(output, "\n");
-	return (output);
+    }
+    if (!n_flag)
+        output = concat_and_free_old(output, "\n");
+    return (output);
 }
 
 /**
