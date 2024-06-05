@@ -99,13 +99,19 @@ int		cmd_export(t_shell *shell, const char *key_value);
 
 //		** environment functions **
 int		init_environment(t_shell *shell);
-char	**split_key_value(const char *str, char c);
+
+int		create_env_var(t_env **env, const char *key_value);
 t_env	*create_env_node(char **key_value);
+
 char	*get_env_val(t_env *env, const char *key);
 int		set_env_var(t_env *env, const char *key, const char *value);
+int		free_key_val(char **key_val, bool success);
+int		overwrite_var(t_env *existing_node, char **key_val);
+void	free_env(t_env *env);
+
 t_env	*get_env_node(t_env *env, const char *key);
 t_env	*get_last_node(t_env *env);
-void	free_env(t_env *env);
+char	**split_key_value(const char *str, char c);
 
 #endif
 

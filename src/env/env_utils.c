@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:42:49 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/04 21:35:04 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/05 09:27:33 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,50 +71,4 @@ char	**split_key_value(const char *str, char c)
 	}
 	result[2] = NULL;
 	return (result);
-}
-
-/**
- * @brief Creates a new node for the environment variable list.
- * @param key_value The key and value pair of the environment variable
- * @return The new node
-*/
-t_env	*create_env_node(char **key_value)
-{
-	t_env	*new_node;
-
-	new_node = (t_env *)malloc(sizeof(t_env));
-	if (new_node == NULL)
-		return (NULL);
-	new_node->key = ft_strdup(key_value[0]);
-	new_node->value = ft_strdup(key_value[1]);
-	free(key_value[0]);
-	free(key_value[1]);
-	free(key_value);
-	if (new_node->key == NULL || new_node->value == NULL)
-	{
-		free(new_node->key);
-		free(new_node->value);
-		free(new_node);
-		return (NULL);
-	}
-	new_node->next = NULL;
-	return (new_node);
-}
-
-/**
- * @brief Frees the environment variable list.
- * @param env The environment variable list of the shell structure
-*/
-void	free_env(t_env *env)
-{
-	t_env	*tmp;
-
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
-	}
 }
