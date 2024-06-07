@@ -19,7 +19,7 @@ void split_tokens_per_command(t_pipeline *start, char **tokens)
             || !ft_memcmp(tokens[curr], "&&", 3))
         {
             fill_node_with_tokens(start, tokens, first, curr);
-            start->next = create_defalt_pipeline_node();
+            start->next = create_default_pipeline_node();
             start = start->next;
             first = curr;
         }

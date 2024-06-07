@@ -11,7 +11,7 @@ INC_DIR = ../../include
 
 NAME = run_parser_tests
 SRCS = test_parser.c \
-		create_defalt_pipeline_node.c \
+		create_default_pipeline_node.c \
 		parser.c \
 		remove_cmd_arg.c \
 		replace_vars.c \
