@@ -28,15 +28,9 @@ t_pipeline *parse(char *line)
 	char		**tokens;
 
 	tokens = split_line(line);
-<<<<<<< Updated upstream
-	res = create_defalt_pipeline_node();
+	res = create_default_pipeline_node();
 	if (!tokens || !res)
 		return (NULL);
-=======
-	if (!tokens)
-		return (NULL);
-	res = create_default_pipeline_node();
->>>>>>> Stashed changes
 	split_tokens_per_command(res, tokens);
 	free_split(tokens);
 	set_pipeline_parameters(res);

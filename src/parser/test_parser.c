@@ -127,12 +127,13 @@ void test_case_3()
 
 // wildcards
 // expected order of objects in readdir: https://stackoverflow.com/a/8984803
+// order of files is changing if you modify the files, so if you face Error message double check the expected order with `ls -f`
 void test_case_4()
 {
     char *line = "echo replace* SEP *parser.c SEP split*.c";
     t_pipeline *res = parse(line);
     // 0
-    char *cmd0_args[] = {"echo", "replace_wildcards.c", "replace_vars.c", "SEP", "parser.c", "test_parser.c", "SEP", "split_tokens_per_command.c", "split_line.c", NULL};
+    char *cmd0_args[] = {"echo", "replace_vars.c", "replace_wildcards.c", "SEP", "parser.c", "test_parser.c", "SEP", "split_line.c", "split_tokens_per_command.c", NULL};
     t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, NULL, NULL, 0};
     cmdcmp(res->cmd, cmd0, 0);
     // 1
