@@ -88,6 +88,7 @@ typedef struct s_shell
 {
 	t_env	*env;
 	char	*cwd;
+	int		exit_status;
 }	t_shell;
 
 //		** builtin functions **
@@ -113,6 +114,9 @@ t_env	*get_env_node(t_env *env, const char *key);
 t_env	*get_last_node(t_env *env);
 char	**split_key_value(const char *str, char c);
 bool	is_valid_env_var(const char *str);
+
+//		** utility functions **
+void	free_shell_and_exit(t_shell *shell);
 
 #endif
 

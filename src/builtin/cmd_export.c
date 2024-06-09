@@ -6,14 +6,15 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 21:41:27 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 17:49:01 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/09 18:19:25 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief The export command adds a new environment variable or modifies an existing one.
+ * @brief The export command adds a new environment variable
+ * or modifies an existing one.
  * @param shell The shell structure
  * @param key_value The key and value of the environment variable as a string.
  * @return The exit status

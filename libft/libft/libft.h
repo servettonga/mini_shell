@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:53:52 by dmoroz            #+#    #+#             */
-/*   Updated: 2024/06/02 17:33:43 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/09 20:13:50 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <limits.h>
 
 // // struct
 typedef struct s_list
