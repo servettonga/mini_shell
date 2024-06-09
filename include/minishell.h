@@ -94,7 +94,7 @@ typedef struct s_shell
 int		cmd_echo(const char **args);
 int		cmd_pwd(t_shell *shell);
 int		cmd_env(t_shell *shell);
-int		cmd_unset(t_shell *shell, const char *key);
+void	cmd_unset(t_shell *shell, const char *key);
 int		cmd_export(t_shell *shell, const char *key_value);
 
 //		** environment functions **
@@ -112,6 +112,7 @@ void	free_env(t_env *env);
 t_env	*get_env_node(t_env *env, const char *key);
 t_env	*get_last_node(t_env *env);
 char	**split_key_value(const char *str, char c);
+bool	is_valid_env_var(const char *str);
 
 #endif
 

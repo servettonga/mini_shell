@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:12:16 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/04 12:27:08 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/09 17:56:21 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,27 @@ static void test_cmd_env(void)
 	remove("test_output");
 }
 
+static void test_cmd_export(void)
+{
+    t_shell *shell = (t_shell *)malloc(sizeof(t_shell));
+    shell->env = NULL;
+    init_environment(shell);
+    char *new_var = "NEW_VAR=new_value";
+    cmd_export(shell, new_var);
+    t_env *env_node = get_env_node(shell->env, "NEW_VAR");
+    CU_ASSERT_PTR_NOT_NULL(env_node);
+    if (env_node != NULL)
+        CU_ASSERT_STRING_EQUAL(env_node->value, "new_value");
+    char *overwrite_var = "HOME=new_home";
+    cmd_export(shell, overwrite_var);
+    env_node = get_env_node(shell->env, "HOME");
+    CU_ASSERT_PTR_NOT_NULL(env_node);
+    if (env_node != NULL)
+        CU_ASSERT_STRING_EQUAL(env_node->value, "new_home");
+    free_env(shell->env);
+    free(shell);
+}
+
 int	main(void)
 {
 	CU_pSuite	pSuite;
@@ -156,6 +177,7 @@ int	main(void)
 	CU_add_test(pSuite, "test_cmd_pwd", test_cmd_pwd);
     CU_add_test(pSuite, "test_cmd_env", test_cmd_env);
     CU_add_test(pSuite, "test_cmd_unset", test_cmd_unset);
+	CU_add_test(pSuite, "test_cmd_export", test_cmd_export);
 	CU_basic_set_mode(CU_BRM_VERBOSE);
 	CU_basic_run_tests();
 	CU_cleanup_registry();

@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:42:49 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/05 09:27:33 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/09 18:13:50 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_env	*get_env_node(t_env *env, const char *key)
 {
 	while (env)
 	{
-		if (ft_strcmp(env->key, key) == 0)
+		if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
 			return (env);
 		env = env->next;
 	}
@@ -71,4 +71,29 @@ char	**split_key_value(const char *str, char c)
 	}
 	result[2] = NULL;
 	return (result);
+}
+
+/**
+ * @brief Checks if a string is a valid environment variable.
+ * @param str The string to check
+ * @return true if the string is a valid environment variable, false otherwise
+*/
+bool	is_valid_env_var(const char *str)
+{
+	char	**key_val;
+	size_t	i;
+
+	key_val = split_key_value(str, '=');
+	if (key_val == NULL)
+		return (false);
+	if (key_val[0] == NULL || key_val[1] == NULL)
+		return (free_key_val(key_val, false), false);
+	i = 0;
+	while (key_val[0][i])
+	{
+		if (!ft_isalnum(key_val[0][i]) && key_val[0][i] != '_')
+			return (free_key_val(key_val, false), false);
+		i++;
+	}
+	return (free_key_val(key_val, true), true);
 }

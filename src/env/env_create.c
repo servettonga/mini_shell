@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:14:46 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/05 09:52:54 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/09 17:34:21 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
  * @details If the variable already exists, it will be overwritten.
  * @param env The environment variable list of the shell structure
  * @param key_value The key and value of the environment variable as a string.
+ * @return The exit status
 */
 int	create_env_var(t_env **env, const char *key_value)
 {
@@ -25,9 +26,9 @@ int	create_env_var(t_env **env, const char *key_value)
 	char	**key_val;
 	t_env	*existing_node;
 
-	key_val = split_key_value(key_value, '=');
-	if (key_val == NULL)
+	if (!is_valid_env_var(key_value))
 		return (EXIT_FAILURE);
+	key_val = split_key_value(key_value, '=');
 	if (key_val[0] == NULL || key_val[1] == NULL)
 		return (free_key_val(key_val, false));
 	existing_node = get_env_node(*env, key_val[0]);
@@ -47,7 +48,7 @@ int	create_env_var(t_env **env, const char *key_value)
 /**
  * @brief Creates a new node for the environment variable list.
  * @param key_value The key and value pair of the environment variable
- * @return The new node
+ * @return The new node if successful, NULL otherwise
 */
 t_env	*create_env_node(char **key_value)
 {
