@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
+/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 18:44:13 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/03 14:12:15 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/06/10 21:00:43 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ typedef struct s_env
 typedef struct s_shell
 {
 	t_env	*env;
-	char	*cwd;
+	char	*pwd;
+    char	*oldpwd;
 	int		exit_status;
 }	t_shell;
 
@@ -119,4 +120,3 @@ bool	is_valid_env_var(const char *str);
 void	free_shell_and_exit(t_shell *shell);
 
 #endif
-

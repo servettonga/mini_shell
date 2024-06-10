@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:12:16 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 17:56:21 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/10 21:02:41 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ static void	test_cmd_pwd(void)
 	t_shell	*shell;
 
 	shell = (t_shell *)malloc(sizeof(t_shell));
-	shell->cwd = NULL;
+	shell->pwd = NULL;
 	saved_stdout = dup(STDOUT_FILENO);
 	fd = open("test_output", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (fd == -1)
 	{
 		perror("open");
-		free(shell->cwd);
+		free(shell->pwd);
 		free(shell);
 		return ;
 	}
@@ -42,7 +42,7 @@ static void	test_cmd_pwd(void)
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdout);
 	close(fd);
-	free(shell->cwd);
+	free(shell->pwd);
 	free(shell);
 	fd = open("test_output", O_RDONLY);
 	if (fd == -1)

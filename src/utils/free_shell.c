@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:16:31 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 20:31:05 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/10 21:32:31 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_shell_and_exit(t_shell *shell)
 	if (exit_status < 0 || exit_status > 255)
 		exit_status = 255;
 	free_env(shell->env);
-	free(shell->cwd);
+	free(shell->pwd);
 	free(shell);
 	exit(exit_status);
 }

@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:08:08 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/04 08:57:50 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/10 21:01:33 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@
  */
 int	cmd_pwd(t_shell *shell)
 {
-	if (shell->cwd == NULL || (shell->cwd && shell->cwd[0] == '\0'))
+	if (shell->pwd == NULL || (shell->pwd && shell->pwd[0] == '\0'))
 	{
-		shell->cwd = (char *)malloc(PATH_MAX);
-		if (shell->cwd == NULL)
+		shell->pwd = (char *)malloc(PATH_MAX);
+		if (shell->pwd == NULL)
 			return (perror("pwd"), EXIT_FAILURE);
-		if (getcwd(shell->cwd, PATH_MAX) == NULL)
+		if (getcwd(shell->pwd, PATH_MAX) == NULL)
 			return (perror("pwd"), EXIT_FAILURE);
 	}
-	ft_putendl_fd(shell->cwd, STDOUT_FILENO);
+	ft_putendl_fd(shell->pwd, STDOUT_FILENO);
 	return (EXIT_SUCCESS);
 }
