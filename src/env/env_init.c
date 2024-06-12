@@ -6,14 +6,13 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 21:34:34 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/05 09:28:14 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 08:34:56 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int		handle_errors(t_env *new_node, char **key_value);
-static t_env	*add_env_node(t_env *last_n, t_env *new_n, char **key_val);
 
 /**
  * @brief Initializes the environment variables.
@@ -71,15 +70,4 @@ static int	handle_errors(t_env *new_node, char **key_value)
 		free(key_value);
 	}
 	return (ret);
-}
-
-static t_env	*add_env_node(t_env *last_n, t_env *new_n, char **key_val)
-{
-	free(key_val[0]);
-	free(key_val[1]);
-	free(key_val);
-	if (last_n == NULL)
-		return (new_n);
-	last_n->next = new_n;
-	return (last_n);
 }

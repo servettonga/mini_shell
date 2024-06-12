@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 21:29:40 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 18:13:16 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 10:36:51 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*get_env_val(t_env *env, const char *key)
 {
 	while (env)
 	{
-		if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
+		if (ft_strcmp(env->key, key) == 0)
 			return (env->value);
 		env = env->next;
 	}
@@ -40,7 +40,7 @@ int	set_env_var(t_env *env, const char *key, const char *value)
 {
 	while (env)
 	{
-		if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
+		if (ft_strcmp(env->key, key) == 0)
 		{
 			free(env->value);
 			env->value = ft_strdup(value);

@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 09:01:52 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/04 09:02:30 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 10:38:07 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	cmd_echo(const char **args)
 	n_flag = false;
 	if (args == NULL || *args == NULL)
 		return (EXIT_FAILURE);
-	if (args[1] && ft_strncmp(args[1], "-n", 2) == 0)
+	if (args[1] && ft_strcmp(args[1], "-n") == 0)
 		n_flag = true;
 	output = concat_args(args, n_flag);
 	ft_putstr_fd(output, STDOUT_FILENO);

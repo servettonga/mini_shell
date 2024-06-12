@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:11:53 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 18:16:58 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 10:38:33 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,14 @@ void	cmd_unset(t_shell *shell, const char *key)
 	prev = NULL;
 	while (current != NULL)
 	{
-		if (strcmp(current->key, key) == 0)
+		if (ft_strcmp(current->key, key) == 0)
 		{
 			if (prev == NULL)
 				shell->env = current->next;
 			else
 				prev->next = current->next;
-			free(current->key);
 			free(current->value);
-			free(current);
-			printf("Deleted %s\n", key);
+			current->value = NULL;
 			return ;
 		}
 		prev = current;

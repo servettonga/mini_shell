@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:42:49 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 18:13:50 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 10:37:13 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_env	*get_env_node(t_env *env, const char *key)
 {
 	while (env)
 	{
-		if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
+		if (ft_strcmp(env->key, key) == 0)
 			return (env);
 		env = env->next;
 	}

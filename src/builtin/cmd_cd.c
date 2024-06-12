@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:37:41 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/10 21:31:15 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 10:37:48 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	cmd_cd(t_shell *shell, char **args)
 	{
 		free(shell->oldpwd);
 		shell->oldpwd = ft_strdup(shell->pwd);
+		set_env_var(shell->env, "OLDPWD", shell->oldpwd);
 	}
 	shell->pwd = malloc(PATH_MAX);
 	if (getcwd(shell->pwd, PATH_MAX) == NULL)
@@ -58,11 +59,11 @@ static bool	is_home_keyword(const char *arg)
 {
 	if (arg[0] == '~' && (arg[1] == '\0'))
 		return (true);
-	else if (ft_strncmp(arg, "--", 2) == 0)
+	else if (ft_strcmp(arg, "--") == 0)
 		return (true);
-	else if (ft_strncmp(arg, "$HOME", 6) == 0)
+	else if (ft_strcmp(arg, "$HOME") == 0)
 		return (true);
-	else if (ft_strncmp(arg, "${HOME}", 8) == 0)
+	else if (ft_strcmp(arg, "${HOME}") == 0)
 		return (true);
 	return (false);
 }
