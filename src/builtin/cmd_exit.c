@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:04:21 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 20:24:57 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 10:46:00 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ void	cmd_exit(t_shell *shell, char **args)
 	}
 	if (shell->exit_status == EXIT_SUCCESS)
 		ft_putendl_fd("exit", STDERR_FILENO);
-	free_shell_and_exit(shell);
+	cleanup_and_exit_shell(shell);
 }

@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/11 20:39:34 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 11:00:15 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,12 @@ typedef struct s_env
 typedef struct s_shell
 {
 	t_env	*env;
-	char	*pwd;
-	char	*oldpwd;
 	int		exit_status;
 }	t_shell;
 
 //		** builtin functions **
 int		cmd_echo(const char **args);
-int		cmd_pwd(t_shell *shell);
+int		cmd_pwd(void);
 int		cmd_env(t_shell *shell);
 void	cmd_unset(t_shell *shell, const char *key);
 int		cmd_export(t_shell *shell, const char *key_value);
@@ -117,6 +115,6 @@ char	**split_key_value(const char *str, char c);
 bool	is_valid_env_var(const char *str);
 
 //		** utility functions **
-void	free_shell_and_exit(t_shell *shell);
+void	cleanup_and_exit_shell(t_shell *shell);
 
 #endif

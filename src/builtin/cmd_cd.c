@@ -6,14 +6,13 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:37:41 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 10:37:48 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 11:10:55 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static bool	is_home_keyword(const char *arg);
-static int	return_err(char *msg);
 
 /**
  * @brief Change current working directory
@@ -29,30 +28,20 @@ int	cmd_cd(t_shell *shell, char **args)
 	{
 		change_to = get_env_val(shell->env, "HOME");
 		if (change_to == NULL)
-			return (return_err("minishell: cd: HOME not set"));
+		{
+			ft_putendl_fd("minishell: cd: HOME not set", 2);
+			return (EXIT_FAILURE);
+		}
 	}
 	else
 		change_to = args[1];
 	if (chdir(change_to) != 0)
-		return (ft_putstr_fd("minishell: cd: can't cd to ", 2),
-			return_err(change_to));
-	if (shell->oldpwd == NULL)
-		return (return_err("minishell: cd: OLDPWD not set"));
-	else
 	{
-		free(shell->oldpwd);
-		shell->oldpwd = ft_strdup(shell->pwd);
-		set_env_var(shell->env, "OLDPWD", shell->oldpwd);
+		ft_putstr_fd("minishell: cd: can't cd to ", 2);
+		ft_putendl_fd(change_to, 2);
+		return (EXIT_FAILURE);
 	}
-	shell->pwd = malloc(PATH_MAX);
-	if (getcwd(shell->pwd, PATH_MAX) == NULL)
-		return (return_err("minishell: cd: getcwd failed"));
 	return (EXIT_SUCCESS);
-}
-
-static int	return_err(char *msg)
-{
-	return (ft_putendl_fd(msg, 2), EXIT_FAILURE);
 }
 
 static bool	is_home_keyword(const char *arg)

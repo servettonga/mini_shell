@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:16:31 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/10 21:32:31 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 11:08:08 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * @brief Frees the shell structure and exits the shell with the exit status.
  * @param shell The shell structure to free
  */
-void	free_shell_and_exit(t_shell *shell)
+void	cleanup_and_exit_shell(t_shell *shell)
 {
 	int	exit_status;
 
@@ -25,7 +25,6 @@ void	free_shell_and_exit(t_shell *shell)
 	if (exit_status < 0 || exit_status > 255)
 		exit_status = 255;
 	free_env(shell->env);
-	free(shell->pwd);
 	free(shell);
 	exit(exit_status);
 }

@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:08:08 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/10 21:01:33 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/12 11:06:21 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,15 @@
 /**
  * @brief The `pwd` command writes the absolute pathname of the current working
  * directory to the standard output.
- * @param shell The shell structure.
  */
-int	cmd_pwd(t_shell *shell)
+int	cmd_pwd(void)
 {
-	if (shell->pwd == NULL || (shell->pwd && shell->pwd[0] == '\0'))
+	char	cwd[PATH_MAX];
+
+	if (getcwd(cwd, PATH_MAX) == NULL)
 	{
-		shell->pwd = (char *)malloc(PATH_MAX);
-		if (shell->pwd == NULL)
-			return (perror("pwd"), EXIT_FAILURE);
-		if (getcwd(shell->pwd, PATH_MAX) == NULL)
-			return (perror("pwd"), EXIT_FAILURE);
+		ft_putendl_fd("minishell: pwd: error", STDERR_FILENO);
+		return (EXIT_FAILURE);
 	}
-	ft_putendl_fd(shell->pwd, STDOUT_FILENO);
-	return (EXIT_SUCCESS);
+	return (ft_putendl_fd(cwd, STDOUT_FILENO), EXIT_SUCCESS);
 }
