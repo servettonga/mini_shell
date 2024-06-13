@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:11:53 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 08:16:30 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/13 17:25:24 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,4 @@ void	cmd_unset(t_shell *shell, const char *key)
 		}
 		current = current->next;
 	}
-	printf("unset: %s: not found\n", key);
 }
