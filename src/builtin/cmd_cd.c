@@ -6,13 +6,14 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:37:41 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 11:10:55 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/13 17:16:40 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static bool	is_home_keyword(const char *arg);
+static int	update_pwd_env(t_shell *shell, char *old_pwd);
 
 /**
  * @brief Change current working directory
@@ -23,6 +24,7 @@ static bool	is_home_keyword(const char *arg);
 int	cmd_cd(t_shell *shell, char **args)
 {
 	char	*change_to;
+	char	*old_pwd;
 
 	if (args[1] == NULL || is_home_keyword(args[1]))
 	{
@@ -35,13 +37,14 @@ int	cmd_cd(t_shell *shell, char **args)
 	}
 	else
 		change_to = args[1];
+	old_pwd = getcwd(NULL, 0);
 	if (chdir(change_to) != 0)
 	{
 		ft_putstr_fd("minishell: cd: can't cd to ", 2);
 		ft_putendl_fd(change_to, 2);
-		return (EXIT_FAILURE);
+		return (free(old_pwd), EXIT_FAILURE);
 	}
-	return (EXIT_SUCCESS);
+	return (update_pwd_env(shell, old_pwd));
 }
 
 static bool	is_home_keyword(const char *arg)
@@ -55,4 +58,29 @@ static bool	is_home_keyword(const char *arg)
 	else if (ft_strcmp(arg, "${HOME}") == 0)
 		return (true);
 	return (false);
+}
+
+static int	update_pwd_env(t_shell *shell, char *old_pwd)
+{
+	char	*new_pwd;
+
+	new_pwd = getcwd(NULL, 0);
+	if (new_pwd == NULL)
+	{
+		ft_putendl_fd("minishell: cd: error retrieving current directory", 2);
+		return (free(old_pwd), EXIT_FAILURE);
+	}
+	if (set_env_var(shell->env, "OLDPWD", old_pwd) == EXIT_FAILURE)
+	{
+		free(new_pwd);
+		return (free(old_pwd), EXIT_FAILURE);
+	}
+	if (set_env_var(shell->env, "PWD", new_pwd) == EXIT_FAILURE)
+	{
+		free(new_pwd);
+		return (free(old_pwd), EXIT_FAILURE);
+	}
+	free(old_pwd);
+	free(new_pwd);
+	return (EXIT_SUCCESS);
 }
