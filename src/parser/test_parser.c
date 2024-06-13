@@ -1,12 +1,5 @@
 #include "parser.h"
 
-// mock function
-char *get_varval(char *name)
-{
-    (void)name;
-    return ("my_var_val");
-}
-
 // helper functions
 int my_strcmp(char *s1, char *s2)
 {
@@ -56,7 +49,7 @@ void set_next(t_pipeline **node)
 void test_case_1()
 {
     char *line = "ls -l | grep -e .c | wc -l";
-    t_pipeline *res = parse(line);
+    t_pipeline *res = parse(line, NULL);
     // 0
     char *cmd0_args[] = {"ls", "-l", NULL};
     t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, NULL, NULL, 0};
@@ -85,7 +78,7 @@ void test_case_1()
 void test_case_2()
 {
     char *line = "<infile ls && grep 1 >outfile || << LIM >> outfile wc -l";
-    t_pipeline *res = parse(line);
+    t_pipeline *res = parse(line, NULL);
     // 0
     char *cmd0_args[] = {"ls", NULL};
     t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, "infile", NULL, 0};
@@ -114,7 +107,15 @@ void test_case_2()
 void test_case_3()
 {
     char *line = "echo $VAR $? \"$?\" '$?' '\"$?\"' \"'$VAR'\"";
-    t_pipeline *res = parse(line);
+    t_env *env1 = malloc(sizeof(t_env));
+    t_env *env2 = malloc(sizeof(t_env));
+    env1->key = "?";
+    env1->value = "my_var_val";
+    env1->next = env2;
+    env2->key = "VAR";
+    env2->value = "my_var_val";
+    env2->next = NULL;
+    t_pipeline *res = parse(line, env1);
     // 0
     char *cmd0_args[] = {"echo", "my_var_val", "my_var_val", "my_var_val", "$?", "\"$?\"", "'my_var_val'", NULL};
     t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, NULL, NULL, 0};
@@ -131,7 +132,7 @@ void test_case_3()
 void test_case_4()
 {
     char *line = "echo replace* SEP *parser.c SEP split*.c";
-    t_pipeline *res = parse(line);
+    t_pipeline *res = parse(line, NULL);
     // 0
     char *cmd0_args[] = {"echo", "replace_vars.c", "replace_wildcards.c", "SEP", "parser.c", "test_parser.c", "SEP", "split_line.c", "split_tokens_per_command.c", NULL};
     t_command cmd0 = {cmd0_args, CON_NONE, 0, NULL, NULL, NULL, 0};

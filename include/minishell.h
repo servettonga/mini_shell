@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
+/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 11:00:15 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/13 13:45:40 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,6 @@ typedef struct	s_pipeline
 	struct s_pipeline	*next;
 }	t_pipeline;
 
-t_pipeline	*parse(char *line);
-
-// utils
-char	*get_varval(char *name); // TODO implement in env section
-void	free_split(char **split);
-int		get_split_size(char **split);
-int		ft_isspace(int c);
-
 // TODO: structure suggestion for environment variables
 typedef struct s_env
 {
@@ -89,6 +81,13 @@ typedef struct s_shell
 	t_env	*env;
 	int		exit_status;
 }	t_shell;
+
+t_pipeline	*parse(char *line, t_env *env);
+
+// utils
+void	free_split(char **split);
+int		get_split_size(char **split);
+int		ft_isspace(int c);
 
 //		** builtin functions **
 int		cmd_echo(const char **args);

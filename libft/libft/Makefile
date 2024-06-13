@@ -13,7 +13,7 @@ SRCS_FTSTR = ft_substr.c \
              ft_strjoin.c \
              ft_strlcat.c \
              ft_strdup.c \
-             ft_strchr.c \
+             ft_strcmp.c \
              ft_strncmp.c \
              ft_strnstr.c \
              ft_strlcpy.c \

@@ -8,7 +8,7 @@ Only 2 types of variable names are accepted:
 - $?
 - $<alphabetic characters>
 */
-void replace_vars(t_pipeline *node)
+void replace_vars(t_pipeline *node, t_env *env)
 {
 	int i;
 	char *start;
@@ -32,8 +32,10 @@ void replace_vars(t_pipeline *node)
 		var_name = get_var_name(start);
 		if (!var_name)
 			continue ;
-		var_value = get_varval(var_name);
-		expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - 1 + ft_strlen(var_value) + 1);
+		var_value = get_env_val(env, var_name);
+		expanded = NULL;
+		if (var_value)
+			expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - 1 + ft_strlen(var_value) + 1);
 		if (expanded)
 		{
 			ft_memcpy(expanded, node->cmd.args[i], start - node->cmd.args[i]);
@@ -42,9 +44,9 @@ void replace_vars(t_pipeline *node)
 			expanded[ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value) - 1] = 0;
 			free(node->cmd.args[i]);
 			node->cmd.args[i] = expanded;
+			start =	NULL;
 		}
 		free(var_name);
-		start = NULL;
 	}
 }
 
