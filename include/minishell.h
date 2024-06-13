@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 13:45:40 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/06/13 18:31:30 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,6 @@ bool	is_valid_env_var(const char *str);
 
 //		** utility functions **
 void	cleanup_and_exit_shell(t_shell *shell);
+long 	ft_atol(const char *str);
 
 #endif

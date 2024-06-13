@@ -1,44 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/28 17:52:23 by dmoroz            #+#    #+#             */
-/*   Updated: 2024/06/13 08:01:39 by sehosaf          ###   ########.fr       */
+/*   Created: 2024/06/13 08:05:00 by sehosaf           #+#    #+#             */
+/*   Updated: 2024/06/13 08:09:31 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-static int	ft_isspace(int c)
+long	ft_atol(const char *str)
 {
-	if (c >= 9 && c <= 13)
-		return (1);
-	else if (c == ' ')
-		return (1);
-	return (0);
-}
+	int		sign;
+	long	output;
+	long	prev_output;
 
-int	ft_atoi(const char *str)
-{
-	int			sign;
-	long long	res;
-
-	while (ft_isspace(*str))
-		str++;
 	sign = 1;
-	if (*str == '+' || *str == '-')
-	{
-		if (*str == '-')
-			sign = -1;
+	output = 0;
+	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
 		str++;
-	}
-	res = 0;
+	if (*str == '-')
+		sign = -1;
+	if (*str == '+' || *str == '-')
+		str++;
 	while (*str >= '0' && *str <= '9')
 	{
-		res = res * 10 + (*(str++) - '0') * sign;
+		prev_output = output;
+		output = output * 10 + (*str - '0');
+		if (sign == 1 && output < prev_output)
+			return LONG_MAX;
+		if (sign == -1 && output > prev_output)
+			return LONG_MIN;
+		str++;
 	}
-	return (res);
+	return (output * sign);
 }
