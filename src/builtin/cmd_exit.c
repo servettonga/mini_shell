@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:04:21 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 10:46:00 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/13 08:11:00 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	cmd_exit(t_shell *shell, char **args)
 	else if (args[2] == NULL)
 	{
 		if (ft_isnumber(args[1]))
-			shell->exit_status = ft_atoi(args[1]);
+			shell->exit_status = ft_atol(args[1]);
 		else
 		{
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
