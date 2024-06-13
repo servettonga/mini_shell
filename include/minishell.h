@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 18:31:30 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/06/13 19:43:26 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include "libft.h"
 
 # define PATH_MAX 4096
+# define PROMPT "minishell > "
 
 /*
 t_command struct represent command which has to be executed
@@ -87,6 +88,7 @@ t_pipeline	*parse(char *line, t_env *env);
 // utils
 void	free_split(char **split);
 int		get_split_size(char **split);
+void	free_pipeline(t_pipeline * p);
 int		ft_isspace(int c);
 
 //		** builtin functions **
@@ -116,5 +118,7 @@ bool	is_valid_env_var(const char *str);
 //		** utility functions **
 void	cleanup_and_exit_shell(t_shell *shell);
 long 	ft_atol(const char *str);
+
+void set_sigactions(void);
 
 #endif
