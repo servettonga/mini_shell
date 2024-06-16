@@ -90,11 +90,13 @@ int		get_split_size(char **split);
 int		ft_isspace(int c);
 
 //		** builtin functions **
+int		cmd_cd(t_shell *shell, char **args);
 int		cmd_echo(const char **args);
-int		cmd_pwd(void);
 int		cmd_env(t_shell *shell);
-void	cmd_unset(t_shell *shell, const char *key);
+void	cmd_exit(t_shell *shell, char **args);
 int		cmd_export(t_shell *shell, const char *key_value);
+int		cmd_pwd(void);
+void	cmd_unset(t_shell *shell, const char *key);
 
 //		** environment functions **
 int		init_environment(t_shell *shell);
