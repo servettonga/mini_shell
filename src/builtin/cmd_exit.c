@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+static bool is_number(const char *str);
+
 /**
  * @brief The `exit` command exits the shell.
  * @param shell The shell structure.
@@ -25,7 +27,7 @@ void	cmd_exit(t_shell *shell, char **args)
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
 		return ;
 	}
-	if (ft_isnumber(args[1]))
+	if (is_number(args[1]))
 		shell->exit_status = ft_atol(args[1]);
 	else
 	{
@@ -41,4 +43,15 @@ void	cmd_exit(t_shell *shell, char **args)
 	if (shell->exit_status > 255)
 		shell->exit_status %= 256;
 	cleanup_and_exit_shell(shell);
+}
+
+static bool	is_number(const char *str)
+{
+	while (str && *str)
+	{
+		if (!ft_isdigit(*str))
+			return (false);
+		str++;
+	}
+	return (true);
 }
