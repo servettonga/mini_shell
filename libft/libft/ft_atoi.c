@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
 static int	ft_isspace(int c)
 {
 	if (c >= 9 && c <= 13)
@@ -23,8 +21,8 @@ static int	ft_isspace(int c)
 
 int	ft_atoi(const char *str)
 {
-	int			sign;
-	long long	res;
+	int	sign;
+	int	res;
 
 	while (ft_isspace(*str))
 		str++;
