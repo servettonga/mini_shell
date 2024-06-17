@@ -6,13 +6,13 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:04:21 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 16:55:19 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/17 21:01:26 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool is_number(const char *str);
+static bool	is_number(const char *str);
 
 /**
  * @brief The `exit` command exits the shell.

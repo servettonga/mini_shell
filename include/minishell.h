@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
+/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 08:10:25 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/13 18:31:30 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@
 # include <string.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 # include <bits/waitflags.h>
 # include <signal.h>
 # include <dirent.h>
@@ -114,6 +116,7 @@ t_env	*get_env_node(t_env *env, const char *key);
 t_env	*get_last_node(t_env *env);
 char	**split_key_value(const char *str, char c);
 bool	is_valid_env_var(const char *str);
+int		get_env_size(t_env *env);
 
 //		** utility functions **
 void	cleanup_and_exit_shell(t_shell *shell);
