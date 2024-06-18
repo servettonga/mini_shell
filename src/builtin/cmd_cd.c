@@ -37,7 +37,10 @@ int	cmd_cd(t_shell *shell, char **args)
 	}
 	else
 		change_to = args[1];
-	old_pwd = getcwd(NULL, 0);
+	if (get_env_val(shell->env, "PWD") != NULL)
+		old_pwd = ft_strdup(get_env_val(shell->env, "PWD"));
+	else
+		old_pwd = getcwd(NULL, 0);
 	if (chdir(change_to) != 0)
 	{
 		ft_putstr_fd("minishell: cd: can't cd to ", 2);
