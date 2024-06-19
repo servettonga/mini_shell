@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "environment.h"
 
 static int validate_var_expansion(char *arg, char *dollar);
 static char *get_var_name(char *dollar);
@@ -97,7 +98,7 @@ static char *get_var_name(char *dollar)
 	{
 		i = 1;
 		while (ft_isalpha(dollar[i]))
-			i++;		
+			i++;
 	}
 	res = malloc(i);
 	if (!res)

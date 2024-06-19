@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:08:08 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 11:06:21 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 20:53:20 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execute.h"
 
 /**
  * @brief The `pwd` command writes the absolute pathname of the current working

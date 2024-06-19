@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:14:46 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 17:34:21 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:13:47 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "environment.h"
 
 /**
  * @brief Creates a new environment variable.

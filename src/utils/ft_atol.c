@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 08:05:00 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 08:09:31 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:21:08 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ long	ft_atol(const char *str)
 		prev_output = output;
 		output = output * 10 + (*str - '0');
 		if (sign == 1 && output < prev_output)
-			return LONG_MAX;
+			return (LONG_MAX);
 		if (sign == -1 && output > prev_output)
-			return LONG_MIN;
+			return (LONG_MIN);
 		str++;
 	}
 	return (output * sign);

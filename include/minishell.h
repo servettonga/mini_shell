@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
+/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 18:31:30 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/06/19 21:33:46 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,33 @@
 # include <stdbool.h>
 # include "libft.h"
 
-# define PATH_MAX 4096
-
 /*
 t_command struct represent command which has to be executed
 Fields:
 	args (char **) - command name/path and it's arguments
 	connection_type (char *) - the way commend is connected to previous one;
-	possible types: "|" - pipe, "&&" - and operator, "||" - or operator, NULL - first command
+	possible types: "|" - pipe, "&&" - and operator, "||" -
+	or operator, NULL - first command
 	is_heredoc (int) - flag, True if input redirection has to be from here_doc
 	limiter (char *) - limiter string for here_doc
-	infile (char *) - file name of redirected input source, if should be; NULL otherwise
-	outfile (char *) - file name of redirected output, if should be; NULL otherwise
-	outfile_append_mode (int) - flag, True if output redirection has to be in append mode;
+	infile (char *) - file name of redirected input source,
+	if should be; NULL otherwise
+	outfile (char *) - file name of redirected output,
+	if should be; NULL otherwise
+	outfile_append_mode (int) - flag,
+	True if output redirection has to be in append mode;
 	ignore if outfile is NULL
 */
 
-typedef enum	e_connection {
+typedef enum e_connection
+{
 	CON_NONE,
 	CON_PIPE,
 	CON_OR,
 	CON_AND
 }	t_connection;
 
-typedef struct	s_command
+typedef struct s_command
 {
 	char			**args;
 	t_connection	connection_type;
@@ -64,13 +67,12 @@ typedef struct	s_command
 	int				outfile_append_mode;
 }	t_command;
 
-typedef struct	s_pipeline
+typedef struct s_pipeline
 {
 	t_command			cmd;
 	struct s_pipeline	*next;
 }	t_pipeline;
 
-// TODO: structure suggestion for environment variables
 typedef struct s_env
 {
 	char			*key;
@@ -86,40 +88,11 @@ typedef struct s_shell
 
 t_pipeline	*parse(char *line, t_env *env);
 
-// utils
-void	free_split(char **split);
-int		get_split_size(char **split);
-int		ft_isspace(int c);
-
-//		** builtin functions **
-int		cmd_cd(t_shell *shell, char **args);
-int		cmd_echo(const char **args);
-int		cmd_env(t_shell *shell);
-void	cmd_exit(t_shell *shell, char **args);
-int		cmd_export(t_shell *shell, const char *key_value);
-int		cmd_pwd(void);
-void	cmd_unset(t_shell *shell, const char *key);
-
-//		** environment functions **
-int		init_environment(t_shell *shell);
-
-int		create_env_var(t_env **env, const char *key_value);
-t_env	*create_env_node(char **key_value);
-
-char	*get_env_val(t_env *env, const char *key);
-int		set_env_var(t_env *env, const char *key, const char *value);
-int		free_key_val(char **key_val, bool success);
-int		overwrite_var(t_env *existing_node, char **key_val);
-void	free_env(t_env *env);
-
-t_env	*get_env_node(t_env *env, const char *key);
-t_env	*get_last_node(t_env *env);
-char	**split_key_value(const char *str, char c);
-bool	is_valid_env_var(const char *str);
-int		get_env_size(t_env *env);
-
-//		** utility functions **
-void	cleanup_and_exit_shell(t_shell *shell);
-long 	ft_atol(const char *str);
+//			** utility functions **
+void		cleanup_and_exit_shell(t_shell *shell);
+long		ft_atol(const char *str);
+void		free_split(char **split);
+int			get_split_size(char **split);
+int			ft_isspace(int c);
 
 #endif
