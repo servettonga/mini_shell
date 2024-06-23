@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:18:00 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 21:31:06 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/22 21:55:38 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 # include "libft.h"
 # include "environment.h"
 
-# define PATH_MAX 4096
+# ifndef PATH_MAX
+#  define PATH_MAX 4096
+# endif
 
 //		** execute **
 int		execute(t_pipeline *p, t_shell *shell);
@@ -31,7 +33,7 @@ char	**env_list_to_array(t_env *env);
 char	*find_sys_cmd(char *cmd, t_env *env);
 
 //		** execute command **
-void	execute_command(t_command *cmd, int pipefd[2], t_env *env);
+int		execute_command(t_command *cmd, int pipefd[2], t_env *env);
 
 //		** execute process **
 void	handle_parent_process(pid_t pid, t_shell *shell);

@@ -6,12 +6,21 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:25:20 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 21:26:23 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/23 21:31:23 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
+static void	concat_key_value(char **env_str, t_env *env);
+static char	*check_file(char *file);
+
+/**
+ * @brief Convert the environment variables to an array
+ * @param env The structure of environment variables
+ * @note The array must be freed after use
+ * @return The array of environment variables in the format "key=value"
+ */
 char	**env_list_to_array(t_env *env)
 {
 	int		count;
@@ -30,9 +39,9 @@ char	**env_list_to_array(t_env *env)
 		env_array[i] = malloc(strlen(e->key) + strlen(e->value) + 2);
 		if (env_array[i] == NULL)
 			return (free_split(env_array), NULL);
-		ft_strlcat(env_array[i], e->key, ft_strlen(e->key) + 1);
-		ft_strlcat(env_array[i], "=", 2);
-		ft_strlcat(env_array[i], e->value, ft_strlen(e->value) + 1);
+		concat_key_value(&env_array[i], e);
+		if (env_array[i] == NULL)
+			return (free_split(env_array), NULL);
 		i++;
 		e = e->next;
 	}
@@ -40,31 +49,71 @@ char	**env_list_to_array(t_env *env)
 	return (env_array);
 }
 
+/**
+ * @brief Find the path of a system command
+ * @param cmd The command to find
+ * @param env The environment variables
+ * @note The path must be freed after use
+ * @return The path of the command if found, NULL otherwise
+ */
 char	*find_sys_cmd(char *cmd, t_env *env)
 {
 	char	*path;
 	char	**path_dirs;
-	char	*sys_cmd;
+	char	sys_cmd_path[PATH_MAX];
 	int		i;
 
 	path = get_env_val(env, "PATH");
-	if (path == NULL)
-		return (NULL);
 	path_dirs = ft_split(path, ':');
 	if (path_dirs == NULL)
 		return (NULL);
 	i = -1;
 	while (path_dirs[++i] != NULL)
 	{
-		sys_cmd = ft_strjoin(path_dirs[i], "/");
-		if (sys_cmd == NULL)
-			return (free_split(path_dirs), NULL);
-		sys_cmd = ft_strjoin(sys_cmd, cmd);
-		if (sys_cmd == NULL)
-			return (free_split(path_dirs), NULL);
-		if (access(sys_cmd, F_OK) == 0)
-			return (sys_cmd);
-		free(sys_cmd);
+		if (strlen(path_dirs[i]) + strlen(cmd) + 1 < PATH_MAX)
+		{
+			ft_memset(sys_cmd_path, 0, PATH_MAX);
+			ft_strlcpy(sys_cmd_path, path_dirs[i], PATH_MAX);
+			ft_strlcat(sys_cmd_path, "/", PATH_MAX);
+			ft_strlcat(sys_cmd_path, cmd, PATH_MAX);
+			if (access(sys_cmd_path, F_OK) == 0)
+				return (free_split(path_dirs), check_file(sys_cmd_path));
+		}
 	}
-	return (free_split(path_dirs), NULL);
+	free_split(path_dirs);
+	printf("minishell: %s: not found\n", cmd);
+	return (NULL);
+}
+
+static void	concat_key_value(char **env_str, t_env *env)
+{
+	size_t	len;
+	char	*tmp;
+
+	len = ft_strlen(env->key) + ft_strlen(env->value) + 2;
+	tmp = ft_calloc(len, sizeof(char));
+	if (tmp == NULL)
+	{
+		*env_str = NULL;
+		return ;
+	}
+	ft_strlcat(tmp, env->key, len);
+	ft_strlcat(tmp, "=", len);
+	ft_strlcat(tmp, env->value, len);
+	*env_str = tmp;
+}
+
+/**
+ * @note Returns only if the file exists and is executable
+ */
+static char	*check_file(char *file)
+{
+	if (access(file, F_OK) == 0)
+	{
+		if (access(file, X_OK) == 0)
+			return (ft_strdup(file));
+		else
+			printf("minishell: %d: %s: Permission denied\n", errno, file);
+	}
+	return (NULL);
 }

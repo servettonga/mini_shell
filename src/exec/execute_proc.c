@@ -6,12 +6,19 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:29:30 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 21:30:30 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/23 21:29:34 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
+/**
+ * @brief Handle the parent process
+ * @param pid The process id
+ * @param shell The shell structure
+ * @note This function waits for the child process to finish
+ * and sets the exit status of the shell
+ */
 void	handle_parent_process(pid_t pid, t_shell *shell)
 {
 	int	status;
@@ -22,6 +29,16 @@ void	handle_parent_process(pid_t pid, t_shell *shell)
 	shell->exit_status = WEXITSTATUS(status);
 }
 
+/**
+ * @brief Handle the child process
+ * @param cmd The command to execute
+ * @param pipefd The pipe file descriptors
+ * @param env The environment variables
+ * @return The process id of the child process
+ * @note This function executes the command in the child process
+ * and exits the child process
+ * @note Signal handlers are set to default in the child process
+ */
 pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_env *env)
 {
 	pid_t	pid;
@@ -29,9 +46,9 @@ pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_env *env)
 	pid = fork();
 	if (pid == 0)
 	{
-		execute_command(cmd, pipefd, env);
-		// TODO: Handle the case when the command is not found
-		exit(EXIT_SUCCESS);
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		exit(execute_command(cmd, pipefd, env));
 	}
 	return (pid);
 }

@@ -6,12 +6,17 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:22:48 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 21:23:09 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/22 18:55:22 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
+/**
+ * @brief Check if the command is a builtin command
+ * @param command The command to check
+ * @return true if the command is a builtin command, false otherwise
+ */
 bool	is_builtin(t_command *command)
 {
 	char		*cmd_name;
@@ -30,6 +35,11 @@ bool	is_builtin(t_command *command)
 	return (false);
 }
 
+/**
+ * @brief Execute a builtin command
+ * @param command The command to execute
+ * @param shell The shell structure
+ */
 void	execute_builtin(t_command *command, t_shell *shell)
 {
 	char	*cmd_name;
