@@ -6,11 +6,12 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:16:31 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 11:08:08 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 20:02:09 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "environment.h"
 
 // TODO: Add further functions to handle the allocated memory for a clean exit
 /**

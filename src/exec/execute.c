@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 21:04:06 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/23 21:31:05 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 20:14:20 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,20 +78,22 @@ static int	handle_relative_path(t_command *cmd, t_shell *shell)
 	return (EXIT_SUCCESS);
 }
 
+// For testing purposes
 /*
 int main(int argc, char *argv[])
 {
+	int ret = EXIT_SUCCESS;
 	if (argc > 1)
 	{
 		t_pipeline *p = malloc(sizeof(t_pipeline));
 		if (p == NULL) {
-			ft_putendl_fd("Failed to allocate memory for t_pipeline", 2);
+			ft_putendl_fd("Failed to allocate memory", 2);
 			return (EXIT_FAILURE);
 		}
 		p->cmd.args = malloc(sizeof(char *) * 3);
 		if (p->cmd.args == NULL) {
 			free(p);
-			ft_putendl_fd("Failed to allocate memory for t_pipeline->cmd.args", 2);
+			ft_putendl_fd("Failed to allocate memory", 2);
 			return (EXIT_FAILURE);
 		}
 		// For instance; ./a.out /bin/ls -lh or ./a.out ls -lh
@@ -103,16 +105,17 @@ int main(int argc, char *argv[])
 		if (shell == NULL) {
 			free_split(p->cmd.args);
 			free(p);
-			ft_putendl_fd("Failed to allocate memory for t_shell", 2);
+			ft_putendl_fd("Failed to allocate memory", 2);
 			return (EXIT_FAILURE);
 		}
 		init_environment(shell);
 		execute(p, shell);
+		ret = shell->exit_status;
 		free_split(p->cmd.args);
 		free(p);
 		free_env(shell->env);
 		free(shell);
 	}
-	return (EXIT_SUCCESS);
+	return (ret);
 }
 */

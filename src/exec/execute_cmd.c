@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:28:19 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/23 21:31:40 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 20:12:11 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@ int	execute_command(t_command *cmd, int pipefd[2], t_env *env)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @note If the command has an input file, redirect the input of the command
+ * to the input file
+ */
 static void	handle_input(t_command *command)
 {
 	int	in;
@@ -57,11 +61,21 @@ static void	handle_input(t_command *command)
 			perror("minishell: input file error: ");
 			exit(EXIT_FAILURE);
 		}
-		dup2(in, STDIN_FILENO);
+		if (dup2(in, STDIN_FILENO) < 0)
+		{
+			perror("minishell: input file error: ");
+			close(in);
+			exit(EXIT_FAILURE);
+		}
 		close(in);
 	}
 }
 
+/**
+ * @note If the command has an output file, redirect the output of the command
+ * to the output file
+ * @note If the output file is in append mode, open the file in append mode
+ */
 static void	handle_output(t_command *command)
 {
 	int	out;
@@ -77,17 +91,36 @@ static void	handle_output(t_command *command)
 			perror("minishell: output file error: ");
 			exit(EXIT_FAILURE);
 		}
-		dup2(out, STDOUT_FILENO);
+		if (dup2(out, STDOUT_FILENO) < 0)
+		{
+			perror("minishell: output file error: ");
+			close(out);
+			exit(EXIT_FAILURE);
+		}
 		close(out);
 	}
 }
 
+/**
+ * @note If the command is a pipe, create a pipe and redirect the output of the
+ * current command to the input of the next command
+ */
 static void	handle_pipe(t_command *command, int pipefd[2])
 {
 	if (command->connection_type == CON_PIPE)
 	{
-		pipe(pipefd);
-		dup2(pipefd[1], STDOUT_FILENO);
+		if (pipe(pipefd) == -1)
+		{
+			perror("minishell: pipe error: ");
+			exit(EXIT_FAILURE);
+		}
+		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
+		{
+			perror("minishell: pipe error: ");
+			close(pipefd[0]);
+			close(pipefd[1]);
+			exit(EXIT_FAILURE);
+		}
 		close(pipefd[1]);
 	}
 }
