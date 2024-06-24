@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:29:30 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/23 21:29:34 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 21:42:11 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,21 @@ void	handle_parent_process(pid_t pid, t_shell *shell)
  * and exits the child process
  * @note Signal handlers are set to default in the child process
  */
-pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_env *env)
+pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_shell *shell)
 {
 	pid_t	pid;
 
 	pid = fork();
+	if (pid < 0)
+	{
+		perror("minishell: Fork failed: ");
+		return (pid);
+	}
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		exit(execute_command(cmd, pipefd, env));
+		exit(execute_command(cmd, pipefd, shell));
 	}
 	return (pid);
 }

@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:28:19 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/24 20:12:11 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 21:40:23 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,19 @@ static void	handle_pipe(t_command *command, int pipefd[2]);
  * @brief Execute a command
  * @param cmd The command to execute
  * @param pipefd The pipe file descriptors
- * @param env The environment variables
+ * @param shell The shell structure
  * @note This function executes the command in a child process
  */
-int	execute_command(t_command *cmd, int pipefd[2], t_env *env)
+int	execute_command(t_command *cmd, int pipefd[2], t_shell *shell)
 {
 	char	**env_array;
 
 	handle_input(cmd);
 	handle_output(cmd);
 	handle_pipe(cmd, pipefd);
-	env_array = env_list_to_array(env);
+	if (is_builtin(cmd))
+		return (execute_builtin(cmd, shell));
+	env_array = env_list_to_array(shell->env);
 	if (env_array == NULL)
 	{
 		ft_putendl_fd("minishell: environment list is empty", 2);

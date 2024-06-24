@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:22:48 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/22 18:55:22 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 21:48:41 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,34 @@ bool	is_builtin(t_command *command)
 	return (false);
 }
 
+// TODO: Adjust the functions to handle connection types if needed
 /**
  * @brief Execute a builtin command
  * @param command The command to execute
  * @param shell The shell structure
  */
-void	execute_builtin(t_command *command, t_shell *shell)
+int	execute_builtin(t_command *command, t_shell *shell)
 {
-	char	*cmd_name;
+	char			*cmd_name;
+	int				ret;
+	t_connection	connection_type;
 
+	ret = EXIT_SUCCESS;
+	connection_type = command->connection_type;
 	cmd_name = command->args[0];
 	if (ft_strcmp(cmd_name, "cd") == 0)
-		cmd_cd(shell, command->args);
+		ret = cmd_cd(shell, command->args);
 	else if (ft_strcmp(cmd_name, "echo") == 0)
-		cmd_echo((const char **)command->args);
+		ret = cmd_echo((const char **)command->args);
 	else if (ft_strcmp(cmd_name, "env") == 0)
-		cmd_env(shell);
+		ret = cmd_env(shell);
 	else if (ft_strcmp(cmd_name, "exit") == 0)
-		cmd_exit(shell, command->args);
+		ret = cmd_exit(shell, command->args, connection_type);
 	else if (ft_strcmp(cmd_name, "export") == 0)
-		cmd_export(shell, command->args[1]);
+		ret = cmd_export(shell, command->args[1]);
 	else if (ft_strcmp(cmd_name, "pwd") == 0)
-		cmd_pwd();
+		ret = cmd_pwd();
 	else if (ft_strcmp(cmd_name, "unset") == 0)
-		cmd_unset(shell, command->args[1]);
+		ret = cmd_unset(shell, command->args[1]);
+	return (ret);
 }

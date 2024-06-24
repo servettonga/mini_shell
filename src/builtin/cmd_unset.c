@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:11:53 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 20:53:25 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 20:58:47 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * @param shell The shell structure.
  * @param key The key of the environment variable to delete.
 */
-void	cmd_unset(t_shell *shell, const char *key)
+int	cmd_unset(t_shell *shell, const char *key)
 {
 	t_env	*current;
 
@@ -28,8 +28,9 @@ void	cmd_unset(t_shell *shell, const char *key)
 		{
 			free(current->value);
 			current->value = NULL;
-			return ;
+			return (EXIT_SUCCESS);
 		}
 		current = current->next;
 	}
+	return (EXIT_FAILURE);
 }
