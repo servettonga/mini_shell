@@ -1,5 +1,8 @@
 ## Brief Summary
 
+![minishell](https://github.com/servettonga/minishell_project/assets/83537967/da9e9cf6-87ff-4ea0-a71a-80c2c6b7ed61)
+
+
 1. Initialize shell
 	1. Set up signal handlers for `SIGINT`, `SIGQUIT`, `EOF`
 	2. Initialize command history
