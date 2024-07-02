@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/22 19:16:08 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/01 22:03:54 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,10 @@ long		ft_atol(const char *str);
 void		free_split(char **split);
 int			get_split_size(char **split);
 int			ft_isspace(int c);
+
+//			** signal handlers **
+void		sigint_handler(int signum);
+void		sigquit_handler(int signum);
+void		set_signal_handlers(void);
 
 #endif
