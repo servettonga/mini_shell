@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/01 22:03:54 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/03 10:50:24 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <bits/waitflags.h>
-# include <signal.h>
 # include <dirent.h>
 # include <errno.h>
 # include <stdbool.h>
@@ -97,8 +96,7 @@ int			get_split_size(char **split);
 int			ft_isspace(int c);
 
 //			** signal handlers **
-void		sigint_handler(int signum);
-void		sigquit_handler(int signum);
-void		set_signal_handlers(void);
+void		interactive_signal_handlers(void);
+void		non_interactive_signal_handlers(void);
 
 #endif
