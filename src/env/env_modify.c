@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 21:29:40 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 10:36:51 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:14:02 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "environment.h"
 
 /**
  * @brief Gets the value of an environment variable.

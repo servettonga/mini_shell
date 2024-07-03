@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:42:49 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 10:37:13 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:14:07 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "environment.h"
 
 /**
  * @brief Gets the environment variable node with the specified key.
@@ -96,4 +96,24 @@ bool	is_valid_env_var(const char *str)
 		i++;
 	}
 	return (free_key_val(key_val, true), true);
+}
+
+/**
+ * @brief Gets the size of the environment variable list.
+ * @param env The environment variable list of the shell structure
+ * @return The size of the list
+ */
+int	get_env_size(t_env *env)
+{
+	int		count;
+	t_env	*tmp;
+
+	count = 0;
+	tmp = env;
+	while (tmp)
+	{
+		count++;
+		tmp = tmp->next;
+	}
+	return (count);
 }

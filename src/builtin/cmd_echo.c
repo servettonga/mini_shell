@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 09:01:52 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 11:05:11 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 20:53:02 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execute.h"
 
 static char	*concat_and_free_old(char *old_str, const char *str_to_add);
 static char	*concat_args(const char **args, bool n_flag);

@@ -6,26 +6,26 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:04:21 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 16:55:19 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/24 21:06:54 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execute.h"
 
-static bool is_number(const char *str);
+static bool	is_number(const char *str);
 
 /**
  * @brief The `exit` command exits the shell.
  * @param shell The shell structure.
  */
-void	cmd_exit(t_shell *shell, char **args)
+int	cmd_exit(t_shell *shell, char **args, t_connection ct)
 {
 	if (args[1] == NULL)
 		shell->exit_status = EXIT_SUCCESS;
 	if (args[2] != NULL)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		return ;
+		return (EXIT_FAILURE);
 	}
 	if (is_number(args[1]))
 		shell->exit_status = ft_atol(args[1]);
@@ -42,7 +42,9 @@ void	cmd_exit(t_shell *shell, char **args)
 		shell->exit_status = 256 + shell->exit_status;
 	if (shell->exit_status > 255)
 		shell->exit_status %= 256;
-	cleanup_and_exit_shell(shell);
+	if (ct == CON_NONE)
+		cleanup_and_exit_shell(shell);
+	return (shell->exit_status);
 }
 
 static bool	is_number(const char *str)

@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 21:41:27 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/09 18:19:25 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:03:48 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execute.h"
 
 /**
  * @brief The export command adds a new environment variable

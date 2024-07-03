@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 21:34:34 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 08:34:56 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:13:54 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "environment.h"
 
 static int		handle_errors(t_env *new_node, char **key_value);
 

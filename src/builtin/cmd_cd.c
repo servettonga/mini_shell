@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:37:41 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/13 17:16:40 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:03:35 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execute.h"
 
 static bool	is_home_keyword(const char *arg);
 static int	update_pwd_env(t_shell *shell, char *old_pwd);

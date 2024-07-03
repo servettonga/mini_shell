@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:12:16 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/12 11:07:06 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 21:30:54 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "minishell.h"
+#include "execute.h"
 
 static void	test_cmd_pwd(void)
 {

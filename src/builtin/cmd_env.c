@@ -6,11 +6,11 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 20:21:32 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/03 20:14:03 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/06/19 20:53:00 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execute.h"
 
 /**
  * @brief The `env` command prints the environment variables.
