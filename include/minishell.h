@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
+/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/03 10:50:24 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/08 17:20:18 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ typedef struct s_shell
 }	t_shell;
 
 t_pipeline	*parse(char *line, t_env *env);
+int			init_environment(t_shell *shell);
+int			execute(t_pipeline *p, t_shell *shell);
 
 //			** utility functions **
 void		cleanup_and_exit_shell(t_shell *shell);
@@ -94,9 +96,14 @@ long		ft_atol(const char *str);
 void		free_split(char **split);
 int			get_split_size(char **split);
 int			ft_isspace(int c);
+int			validate_pipeline(t_pipeline *p);
+void		free_pipeline(t_pipeline * p);
+
 
 //			** signal handlers **
 void		interactive_signal_handlers(void);
 void		non_interactive_signal_handlers(void);
+
+# define PROMPT "(minishell) -> "
 
 #endif

@@ -5,6 +5,8 @@ t_pipeline *create_default_pipeline_node(void)
     t_pipeline  *res;
 
     res = malloc(sizeof(t_pipeline));
+    if (!res)
+        return (NULL);
     res->next = NULL;
     res->cmd.args = NULL;
     res->cmd.connection_type = CON_NONE;

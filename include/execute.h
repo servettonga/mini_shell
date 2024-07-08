@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
+/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:18:00 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/24 21:47:24 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/08 16:11:09 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
 # endif
-
-//		** execute **
-int		execute(t_pipeline *p, t_shell *shell);
 
 //		** execute builtin **
 bool	is_builtin(t_command *command);
