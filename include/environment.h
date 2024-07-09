@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
+/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:18:03 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 21:33:49 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/08 16:00:40 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 # include "libft.h"
 
 //		** environment functions **
-int		init_environment(t_shell *shell);
-
 int		create_env_var(t_env **env, const char *key_value);
 t_env	*create_env_node(char **key_value);
 
