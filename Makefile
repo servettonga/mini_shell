@@ -1,5 +1,5 @@
 # Compiler and flags
-CC = gcc
+CC = clang
 CFLAGS = -Wall -Wextra -Werror
 C_PRECOMPILE_FLAGS = -c
 C_DEBUG_FLAG = -g
