@@ -7,10 +7,11 @@ int main(void)
     t_shell shell;
 
     init_environment(&shell);
-    non_interactive_signal_handlers();
     while (1)
     {
+		interactive_signal_handlers();
         line = readline(PROMPT);
+		non_interactive_signal_handlers();
         if (!line)
             exit(EXIT_SUCCESS);
         if (!*line)

@@ -50,10 +50,6 @@ pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_shell *shell)
 		return (pid);
 	}
 	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
 		exit(execute_command(cmd, pipefd, shell));
-	}
 	return (pid);
 }
