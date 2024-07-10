@@ -27,7 +27,7 @@ int	cmd_unset(t_shell *shell, const char *key)
 		if (ft_strcmp(current->key, key) == 0)
 		{
 			free(current->value);
-			current->value = NULL;
+			current->value = ft_strdup("");
 			return (EXIT_SUCCESS);
 		}
 		current = current->next;
