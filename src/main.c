@@ -19,7 +19,7 @@ int main(void)
             continue ;
         }
         add_history(line);
-        p = parse(line, shell.env);
+        p = parse(line, &shell);
         free(line);
         if (validate_pipeline(p) == EXIT_SUCCESS)
             execute(p, &shell);
