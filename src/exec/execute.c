@@ -44,11 +44,16 @@ static int	handle_builtin(t_command *cmd, t_shell *shell)
 	pid_t	pid;
 	int		pipe_fd[2];
 
-	pid = handle_child_process(cmd, pipe_fd, shell);
-	if (pid < 0)
-		return (EXIT_FAILURE);
-	handle_parent_process(pid, shell);
-	return (EXIT_SUCCESS);
+	if (cmd->connection_type == CON_NONE)
+		pid = execute_builtin(cmd, shell);
+	else
+	{
+		pid = handle_child_process(cmd, pipe_fd, shell);
+		if (pid < 0)
+			return (EXIT_FAILURE);
+		handle_parent_process(pid, shell);
+	}
+	return (pid);
 }
 
 static int	handle_absolute_path(t_command *cmd, t_shell *shell)
