@@ -22,14 +22,14 @@ int	cmd_exit(t_shell *shell, char **args, t_connection ct)
 {
 	if (args[1] == NULL)
 		shell->exit_status = EXIT_SUCCESS;
-	if (args[2] != NULL)
+	else if (args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	if (is_number(args[1]))
 		shell->exit_status = ft_atol(args[1]);
-	else
+	else if (args[1] && !is_number(args[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(args[1], STDERR_FILENO);
@@ -49,6 +49,8 @@ int	cmd_exit(t_shell *shell, char **args, t_connection ct)
 
 static bool	is_number(const char *str)
 {
+	if (str == NULL)
+		return (false);
 	while (str && *str)
 	{
 		if (!ft_isdigit(*str))
