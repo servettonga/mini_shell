@@ -12,24 +12,24 @@
 
 #include "execute.h"
 
-static void	handle_input(t_command *command);
-static void	handle_output(t_command *command);
-static void	handle_pipe(t_command *command, int pipefd[2]);
+static void handle_input(t_command *cmd);
+static void handle_output(t_command *cmd);
+static void handle_pipe(t_pipeline *p);
 
 /**
  * @brief Execute a command
  * @param cmd The command to execute
- * @param pipefd The pipe file descriptors
+ * @param p The pipe file descriptors
  * @param shell The shell structure
  * @note This function executes the command in a child process
  */
-int	execute_command(t_command *cmd, int pipefd[2], t_shell *shell)
+int execute_command(t_command *cmd, t_shell *shell, t_pipeline *p)
 {
 	char	**env_array;
 
 	handle_input(cmd);
 	handle_output(cmd);
-	handle_pipe(cmd, pipefd);
+	handle_pipe(p);
 	if (is_builtin(cmd))
 		return (execute_builtin(cmd, shell));
 	env_array = env_list_to_array(shell->env);
@@ -51,13 +51,13 @@ int	execute_command(t_command *cmd, int pipefd[2], t_shell *shell)
  * @note If the command has an input file, redirect the input of the command
  * to the input file
  */
-static void	handle_input(t_command *command)
+static void handle_input(t_command *cmd)
 {
 	int	in;
 
-	if (command->infile != NULL)
+	if (cmd->infile != NULL)
 	{
-		in = open(command->infile, O_RDONLY);
+		in = open(cmd->infile, O_RDONLY);
 		if (in < 0)
 		{
 			perror("minishell: input file error: ");
@@ -78,16 +78,16 @@ static void	handle_input(t_command *command)
  * to the output file
  * @note If the output file is in append mode, open the file in append mode
  */
-static void	handle_output(t_command *command)
+static void handle_output(t_command *cmd)
 {
 	int	out;
 
-	if (command->outfile != NULL)
+	if (cmd->outfile != NULL)
 	{
-		if (command->outfile_append_mode)
-			out = open(command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (cmd->outfile_append_mode)
+			out = open(cmd->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
-			out = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			out = open(cmd->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (out < 0)
 		{
 			perror("minishell: output file error: ");
@@ -103,26 +103,11 @@ static void	handle_output(t_command *command)
 	}
 }
 
-/**
- * @note If the command is a pipe, create a pipe and redirect the output of the
- * current command to the input of the next command
- */
-static void	handle_pipe(t_command *command, int pipefd[2])
+static void handle_pipe(t_pipeline *p)
 {
-	if (command->connection_type == CON_PIPE)
-	{
-		if (pipe(pipefd) == -1)
-		{
-			perror("minishell: pipe error: ");
-			exit(EXIT_FAILURE);
-		}
-		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
-		{
-			perror("minishell: pipe error: ");
-			close(pipefd[0]);
-			close(pipefd[1]);
-			exit(EXIT_FAILURE);
-		}
-		close(pipefd[1]);
-	}
+	if (p->prev != NULL)
+		dup2(p->prev->fd_in, STDIN_FILENO);
+	if (p->next != NULL)
+		dup2(p->fd_out, STDOUT_FILENO);
+	close_pipes(p, p);
 }

@@ -28,13 +28,14 @@ int		execute_builtin(t_command *command, t_shell *shell);
 //		** execute utils **
 char	**env_list_to_array(t_env *env);
 char	*find_sys_cmd(char *cmd, t_env *env);
+bool	should_execute(t_connection connection_type, int last_exit_status);
 
 //		** execute command **
-int		execute_command(t_command *cmd, int pipefd[2], t_shell *shell);
+int		execute_command(t_command *cmd, t_shell *shell, t_pipeline *p);
 
 //		** execute process **
-void	handle_parent_process(pid_t pid, t_shell *shell);
-pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_shell *shell);
+void	handle_parent_process(pid_t pid, t_shell *shell, t_pipeline *p);
+pid_t	handle_child_process(t_command *cmd, t_shell *shell, t_pipeline *p);
 
 //		** builtin functions **
 int		cmd_cd(t_shell *shell, char **args);
@@ -44,5 +45,9 @@ int		cmd_exit(t_shell *shell, char **args, t_connection ct);
 int		cmd_export(t_shell *shell, const char *key_value);
 int		cmd_pwd(void);
 int		cmd_unset(t_shell *shell, const char *key);
+
+//		** redirection **
+int		create_pipes(t_pipeline *p);
+void	close_pipes(t_pipeline *p, t_pipeline *ignore);
 
 #endif

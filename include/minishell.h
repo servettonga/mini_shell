@@ -71,6 +71,9 @@ typedef struct s_pipeline
 {
 	t_command			cmd;
 	struct s_pipeline	*next;
+	struct s_pipeline	*prev;
+	int 				fd_in;
+	int 				fd_out;
 }	t_pipeline;
 
 typedef struct s_env
@@ -98,7 +101,6 @@ int			get_split_size(char **split);
 int			ft_isspace(int c);
 int			validate_pipeline(t_pipeline *p);
 void		free_pipeline(t_pipeline * p);
-
 
 //			** signal handlers **
 void		interactive_signal_handlers(void);

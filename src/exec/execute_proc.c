@@ -19,7 +19,7 @@
  * @note This function waits for the child process to finish
  * and sets the exit status of the shell
  */
-void	handle_parent_process(pid_t pid, t_shell *shell)
+void handle_parent_process(pid_t pid, t_shell *shell, t_pipeline *p)
 {
 	int	status;
 
@@ -27,19 +27,19 @@ void	handle_parent_process(pid_t pid, t_shell *shell)
 	while (!WIFEXITED(status) && !WIFSIGNALED(status))
 		waitpid(pid, &status, WUNTRACED);
 	shell->exit_status = WEXITSTATUS(status);
+	close(p->fd_out);
 }
 
 /**
  * @brief Handle the child process
  * @param cmd The command to execute
- * @param pipefd The pipe file descriptors
- * @param env The environment variables
+ * @param shell The shell structure
  * @return The process id of the child process
  * @note This function executes the command in the child process
  * and exits the child process
  * @note Signal handlers are set to default in the child process
  */
-pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_shell *shell)
+pid_t handle_child_process(t_command *cmd, t_shell *shell, t_pipeline *p)
 {
 	pid_t	pid;
 
@@ -50,6 +50,6 @@ pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_shell *shell)
 		return (pid);
 	}
 	if (pid == 0)
-		exit(execute_command(cmd, pipefd, shell));
+		exit(execute_command(cmd, shell, p));
 	return (pid);
 }
