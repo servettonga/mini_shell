@@ -12,7 +12,6 @@
 
 #include "execute.h"
 
-static int handle_builtin(t_command *cmd, t_shell *shell, t_pipeline *p);
 static int handle_absolute_path(t_command *cmd, t_shell *shell, t_pipeline *p);
 static int handle_relative_path(t_command *cmd, t_shell *shell, t_pipeline *p);
 
@@ -29,8 +28,10 @@ int	execute(t_pipeline *p, t_shell *shell)
 	{
 		if (should_execute(current->cmd.connection_type, shell->exit_status))
 		{
-			if (is_builtin(&(current->cmd)))
-				ret = handle_builtin(&(current->cmd), shell, current);
+			if (is_builtin(&(current->cmd)) && current->cmd.connection_type == CON_NONE)
+				ret = execute_builtin(&(current->cmd), shell);
+			else if (is_builtin(&(current->cmd)))
+				ret = handle_process(&(current->cmd), shell, p);
 			else {
 				if (current->cmd.args[0][0] == '/')
 					ret = handle_absolute_path(&(current->cmd), shell, current);
@@ -43,26 +44,9 @@ int	execute(t_pipeline *p, t_shell *shell)
 	return (ret);
 }
 
-static int handle_builtin(t_command *cmd, t_shell *shell, t_pipeline *p)
-{
-	pid_t	pid;
-
-	if (cmd->connection_type == CON_NONE)
-		pid = execute_builtin(cmd, shell);
-	else
-	{
-		pid = handle_child_process(cmd, shell, p);
-		if (pid < 0)
-			return (EXIT_FAILURE);
-		handle_parent_process(pid, shell, p);
-	}
-	return (pid);
-}
-
 static int handle_absolute_path(t_command *cmd, t_shell *shell, t_pipeline *p)
 {
 	struct stat	st;
-	pid_t		pid;
 
 	if (stat(cmd->args[0], &st) == -1)
 	{
@@ -76,17 +60,12 @@ static int handle_absolute_path(t_command *cmd, t_shell *shell, t_pipeline *p)
 		shell->exit_status = 126;
 		return (EXIT_FAILURE);
 	}
-	pid = handle_child_process(cmd, shell, p);
-	if (pid < 0)
-		return (EXIT_FAILURE);
-	handle_parent_process(pid, shell, p);
-	return (EXIT_SUCCESS);
+	return (handle_process(cmd, shell, p));
 }
 
 static int handle_relative_path(t_command *cmd, t_shell *shell, t_pipeline *p)
 {
 	char	*cmd_path;
-	pid_t	pid;
 
 	cmd_path = find_sys_cmd(cmd->args[0], shell->env);
 	if (cmd_path == NULL)
@@ -96,9 +75,5 @@ static int handle_relative_path(t_command *cmd, t_shell *shell, t_pipeline *p)
 	}
 	free(cmd->args[0]);
 	cmd->args[0] = cmd_path;
-	pid = handle_child_process(cmd, shell, p);
-	if (pid < 0)
-		return (EXIT_FAILURE);
-	handle_parent_process(pid, shell, p);
-	return (EXIT_SUCCESS);
+	return (handle_process(cmd, shell, p));
 }
