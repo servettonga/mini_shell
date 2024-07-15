@@ -17,14 +17,13 @@
  * @param shell The shell structure
  * @param p The pipeline of the command
  * @param cur The current command in the pipeline to execute
- * @return EXIT_SUCCESS or EXIT_FAILURE
+ * @return Process ID of the child process
  * @note This function executes the command in the child process
  * and exits the child process
  */
-int	handle_process(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	pid_t	pid;
-	int		status;
 
 	pid = fork();
 	if (pid < 0)
@@ -34,14 +33,18 @@ int	handle_process(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 	}
 	if (pid == 0)
 		exit(execute_command(shell, p, cur));
-	else
+	return (pid);
+}
+
+void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds)
+{
+	int	i;
+
+	i = 0;
+	while (i < num_cmds)
 	{
-		waitpid(pid, &status, WUNTRACED);
-		while (!WIFEXITED(status) && !WIFSIGNALED(status))
-			waitpid(pid, &status, WUNTRACED);
-		shell->exit_status = WEXITSTATUS(status);
-		if (cur->cmd.connection_type != CON_NONE)
-			close(p->fd_out);
+		waitpid(cmds[i], &(shell->exit_status), WUNTRACED);
+		shell->exit_status = WEXITSTATUS(shell->exit_status);
+		i++;
 	}
-	return (EXIT_SUCCESS);
 }

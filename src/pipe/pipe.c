@@ -19,7 +19,7 @@
  */
 int	create_pipes(t_pipeline *pipeline)
 {
-	int			pipefd[1024][2];
+	int			pipefd[MAX_CMD][2];
 	t_pipeline	*current;
 	int			i;
 
@@ -46,16 +46,15 @@ int	create_pipes(t_pipeline *pipeline)
  * @brief Closes all the file descriptors of the pipeline except the one passed
  * as argument
  * @param p The pipeline to close the file descriptors for
- * @param ignore The pipeline to ignore
  */
-void	close_pipes(t_pipeline *p, t_pipeline *ignore)
+void close_pipes(t_pipeline *p)
 {
 	t_pipeline	*current;
 
 	current = p;
 	while (current)
 	{
-		if (current != ignore)
+		if (current->cmd.connection_type == CON_PIPE)
 		{
 			close(current->fd_in);
 			close(current->fd_out);

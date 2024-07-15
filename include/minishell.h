@@ -91,7 +91,7 @@ typedef struct s_shell
 
 t_pipeline	*parse(char *line, t_env *env);
 int			init_environment(t_shell *shell);
-int			execute(t_pipeline *pipeline, t_shell *shell);
+void		execute(t_pipeline *pipeline, t_shell *shell);
 
 //			** utility functions **
 void		cleanup_and_exit_shell(t_shell *shell);

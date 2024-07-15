@@ -14,7 +14,7 @@
 
 static void	handle_input(t_command *cmd);
 static void	handle_output(t_command *cmd);
-static void	handle_pipe(t_pipeline *pipeline, t_pipeline *current);
+static void	handle_pipe(t_pipeline *current);
 
 /**
  * @brief Execute a command
@@ -29,9 +29,10 @@ int	execute_command(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 
 	handle_input(&cur->cmd);
 	handle_output(&cur->cmd);
-	handle_pipe(p, cur);
-	if (is_builtin(&cur->cmd))
-		return (execute_builtin(&cur->cmd, shell));
+	handle_pipe(cur);
+	close_pipes(p);
+	if (is_builtin(cur->cmd))
+		return (execute_builtin(cur->cmd, shell));
 	env_array = env_list_to_array(shell->env);
 	if (env_array == NULL)
 	{
@@ -103,11 +104,15 @@ static void	handle_output(t_command *cmd)
 	}
 }
 
-static void	handle_pipe(t_pipeline *pipeline, t_pipeline *current)
+static void	handle_pipe(t_pipeline *current)
 {
-	if (current->prev != NULL)
-		dup2(current->prev->fd_in, STDIN_FILENO);
-	if (current->next != NULL)
+	if (current->prev == NULL && current->next != NULL)
 		dup2(current->fd_out, STDOUT_FILENO);
-	close_pipes(pipeline, current);
+	if (current->prev != NULL && current->next != NULL)
+	{
+		dup2(current->prev->fd_in, STDIN_FILENO);
+		dup2(current->fd_out, STDOUT_FILENO);
+	}
+	if (current->next == NULL && current->prev != NULL)
+		dup2(current->prev->fd_in, STDIN_FILENO);
 }

@@ -12,9 +12,9 @@
 
 #include "execute.h"
 
-static int	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
-static int	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
-static int	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static pid_t	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static pid_t	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 
 /**
  * @brief Executes the commands in the pipeline and returns the exit status
@@ -23,41 +23,44 @@ static int	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur);
  * @return EXIT_SUCCESS or EXIT_FAILURE
  * @note This function is the entry point for executing a pipeline
  */
-int	execute(t_pipeline *pipeline, t_shell *shell)
+void	execute(t_pipeline *pipeline, t_shell *shell)
 {
 	t_pipeline	*cur;
-	int			ret;
+	int			i;
+	int			cmds[MAX_CMD];
 
 	cur = pipeline;
-	ret = EXIT_SUCCESS;
+	i = 0;
 	if (create_pipes(pipeline) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
+		return ;
 	while (cur != NULL)
 	{
 		if (should_execute(cur->cmd.connection_type, shell->exit_status))
 		{
-			if (is_builtin(&(cur->cmd)))
-				ret = handle_builtin(shell, pipeline, cur);
+			if (is_builtin(cur->cmd))
+				cmds[i] = handle_builtin(shell, pipeline, cur);
 			else if (cur->cmd.args[0][0] == '/')
-				ret = absolute_path(shell, pipeline, cur);
+				cmds[i] = absolute_path(shell, pipeline, cur);
 			else
-				ret = relative_path(shell, pipeline, cur);
+				cmds[i] = relative_path(shell, pipeline, cur);
 		}
+		i++;
 		cur = cur->next;
 	}
-	return (ret);
+	close_pipes(pipeline);
+	execute_pipeline(shell, cmds, i);
 }
 
-static int	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	if (cur->cmd.connection_type != CON_NONE
 		&& (cur->cmd.infile != NULL || cur->cmd.outfile != NULL))
-		return (execute_builtin(&(cur->cmd), shell));
+		return (execute_builtin(cur->cmd, shell));
 	else
-		return (handle_process(shell, p, cur));
+		return (create_child(shell, p, cur));
 }
 
-static int	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+static pid_t	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	struct stat	st;
 
@@ -73,10 +76,10 @@ static int	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 		shell->exit_status = 126;
 		return (EXIT_FAILURE);
 	}
-	return (handle_process(shell, p, cur));
+	return (create_child(shell, p, cur));
 }
 
-static int	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+static pid_t	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	char	*cmd_path;
 
@@ -88,5 +91,5 @@ static int	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 	}
 	free(cur->cmd.args[0]);
 	cur->cmd.args[0] = cmd_path;
-	return (handle_process(shell, p, cur));
+	return (create_child(shell, p, cur));
 }

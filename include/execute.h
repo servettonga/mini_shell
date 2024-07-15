@@ -22,8 +22,8 @@
 # endif
 
 //		** execute builtin **
-bool	is_builtin(t_command *command);
-int		execute_builtin(t_command *command, t_shell *shell);
+bool	is_builtin(t_command command);
+int		execute_builtin(t_command command, t_shell *shell);
 
 //		** execute utils **
 char	**env_list_to_array(t_env *env);
@@ -32,7 +32,8 @@ bool	should_execute(t_connection connection_type, int last_exit_status);
 
 //		** execute command **
 int		execute_command(t_shell *shell, t_pipeline *p, t_pipeline *cur);
-int		handle_process(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds);
 
 //		** builtin functions **
 int		cmd_cd(t_shell *shell, char **args);
@@ -45,6 +46,8 @@ int		cmd_unset(t_shell *shell, const char *key);
 
 //		** redirection **
 int		create_pipes(t_pipeline *pipeline);
-void	close_pipes(t_pipeline *p, t_pipeline *ignore);
+void	close_pipes(t_pipeline *p);
+
+# define MAX_CMD 1024
 
 #endif
