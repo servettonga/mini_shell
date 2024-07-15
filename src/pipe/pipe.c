@@ -12,14 +12,19 @@
 
 #include "execute.h"
 
-int create_pipes(t_pipeline *p)
+/**
+ * @brief Creates and assigns the file descriptors for the redirections
+ * @param pipeline The pipeline to create the redirections for
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	create_pipes(t_pipeline *pipeline)
 {
 	int			pipefd[1024][2];
 	t_pipeline	*current;
-	int 		i;
+	int			i;
 
-	current = p;
-	if (!p)
+	current = pipeline;
+	if (!pipeline)
 		return (EXIT_FAILURE);
 	i = 0;
 	while (current)
@@ -37,6 +42,12 @@ int create_pipes(t_pipeline *p)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Closes all the file descriptors of the pipeline except the one passed
+ * as argument
+ * @param p The pipeline to close the file descriptors for
+ * @param ignore The pipeline to ignore
+ */
 void	close_pipes(t_pipeline *p, t_pipeline *ignore)
 {
 	t_pipeline	*current;

@@ -12,43 +12,48 @@
 
 #include "execute.h"
 
-static int handle_absolute_path(t_command *cmd, t_shell *shell, t_pipeline *p);
-static int handle_relative_path(t_command *cmd, t_shell *shell, t_pipeline *p);
+static int	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static int	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 
-int	execute(t_pipeline *p, t_shell *shell)
+/**
+ * @brief Executes the commands in the pipeline and returns the exit status
+ * @param pipeline The pipeline to execute
+ * @param shell The shell structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ * @note This function is the entry point for executing a pipeline
+ */
+int	execute(t_pipeline *pipeline, t_shell *shell)
 {
-	t_pipeline	*current;
+	t_pipeline	*cur;
 	int			ret;
 
-	current = p;
+	cur = pipeline;
 	ret = EXIT_SUCCESS;
-	if (create_pipes(p) == EXIT_FAILURE)
-			return(EXIT_FAILURE);
-	while (current != NULL)
+	if (create_pipes(pipeline) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	while (cur != NULL)
 	{
-		if (should_execute(current->cmd.connection_type, shell->exit_status))
+		if (should_execute(cur->cmd.connection_type, shell->exit_status))
 		{
-			if (is_builtin(&(current->cmd)) && current->cmd.connection_type == CON_NONE)
-				ret = execute_builtin(&(current->cmd), shell);
-			else if (is_builtin(&(current->cmd)))
-				ret = handle_process(&(current->cmd), shell, p);
-			else {
-				if (current->cmd.args[0][0] == '/')
-					ret = handle_absolute_path(&(current->cmd), shell, current);
-				else
-					ret = handle_relative_path(&(current->cmd), shell, current);
-			}
+			if (is_builtin(&(cur->cmd)) && cur->cmd.connection_type == CON_NONE)
+				ret = execute_builtin(&(cur->cmd), shell);
+			else if (is_builtin(&(cur->cmd)))
+				ret = handle_process(shell, pipeline, cur);
+			else if (cur->cmd.args[0][0] == '/')
+				ret = absolute_path(shell, pipeline, cur);
+			else
+				ret = relative_path(shell, pipeline, cur);
 		}
-		current = current->next;
+		cur = cur->next;
 	}
 	return (ret);
 }
 
-static int handle_absolute_path(t_command *cmd, t_shell *shell, t_pipeline *p)
+static int	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	struct stat	st;
 
-	if (stat(cmd->args[0], &st) == -1)
+	if (stat(cur->cmd.args[0], &st) == -1)
 	{
 		perror("minishell: ");
 		shell->exit_status = 127;
@@ -60,20 +65,20 @@ static int handle_absolute_path(t_command *cmd, t_shell *shell, t_pipeline *p)
 		shell->exit_status = 126;
 		return (EXIT_FAILURE);
 	}
-	return (handle_process(cmd, shell, p));
+	return (handle_process(shell, p, cur));
 }
 
-static int handle_relative_path(t_command *cmd, t_shell *shell, t_pipeline *p)
+static int	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	char	*cmd_path;
 
-	cmd_path = find_sys_cmd(cmd->args[0], shell->env);
+	cmd_path = find_sys_cmd(cur->cmd.args[0], shell->env);
 	if (cmd_path == NULL)
 	{
 		shell->exit_status = 127;
 		return (EXIT_FAILURE);
 	}
-	free(cmd->args[0]);
-	cmd->args[0] = cmd_path;
-	return (handle_process(cmd, shell, p));
+	free(cur->cmd.args[0]);
+	cur->cmd.args[0] = cmd_path;
+	return (handle_process(shell, p, cur));
 }

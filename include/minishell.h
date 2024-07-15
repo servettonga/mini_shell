@@ -72,8 +72,8 @@ typedef struct s_pipeline
 	t_command			cmd;
 	struct s_pipeline	*next;
 	struct s_pipeline	*prev;
-	int 				fd_in;
-	int 				fd_out;
+	int					fd_in;
+	int					fd_out;
 }	t_pipeline;
 
 typedef struct s_env
@@ -91,7 +91,7 @@ typedef struct s_shell
 
 t_pipeline	*parse(char *line, t_env *env);
 int			init_environment(t_shell *shell);
-int			execute(t_pipeline *p, t_shell *shell);
+int			execute(t_pipeline *pipeline, t_shell *shell);
 
 //			** utility functions **
 void		cleanup_and_exit_shell(t_shell *shell);
@@ -100,7 +100,7 @@ void		free_split(char **split);
 int			get_split_size(char **split);
 int			ft_isspace(int c);
 int			validate_pipeline(t_pipeline *p);
-void		free_pipeline(t_pipeline * p);
+void		free_pipeline(t_pipeline *p);
 
 //			** signal handlers **
 void		interactive_signal_handlers(void);

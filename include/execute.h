@@ -31,8 +31,8 @@ char	*find_sys_cmd(char *cmd, t_env *env);
 bool	should_execute(t_connection connection_type, int last_exit_status);
 
 //		** execute command **
-int		execute_command(t_command *cmd, t_shell *shell, t_pipeline *p);
-int 	handle_process(t_command *cmd, t_shell *shell, t_pipeline *p);
+int		execute_command(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+int		handle_process(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 
 //		** builtin functions **
 int		cmd_cd(t_shell *shell, char **args);
@@ -44,7 +44,7 @@ int		cmd_pwd(void);
 int		cmd_unset(t_shell *shell, const char *key);
 
 //		** redirection **
-int		create_pipes(t_pipeline *p);
+int		create_pipes(t_pipeline *pipeline);
 void	close_pipes(t_pipeline *p, t_pipeline *ignore);
 
 #endif
