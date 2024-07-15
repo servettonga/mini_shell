@@ -14,6 +14,7 @@
 
 static int	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 static int	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static int	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 
 /**
  * @brief Executes the commands in the pipeline and returns the exit status
@@ -35,10 +36,8 @@ int	execute(t_pipeline *pipeline, t_shell *shell)
 	{
 		if (should_execute(cur->cmd.connection_type, shell->exit_status))
 		{
-			if (is_builtin(&(cur->cmd)) && cur->cmd.connection_type == CON_NONE)
-				ret = execute_builtin(&(cur->cmd), shell);
-			else if (is_builtin(&(cur->cmd)))
-				ret = handle_process(shell, pipeline, cur);
+			if (is_builtin(&(cur->cmd)))
+				ret = handle_builtin(shell, pipeline, cur);
 			else if (cur->cmd.args[0][0] == '/')
 				ret = absolute_path(shell, pipeline, cur);
 			else
@@ -47,6 +46,15 @@ int	execute(t_pipeline *pipeline, t_shell *shell)
 		cur = cur->next;
 	}
 	return (ret);
+}
+
+static int	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+{
+	if (cur->cmd.connection_type != CON_NONE
+		&& (cur->cmd.infile != NULL || cur->cmd.outfile != NULL))
+		return (execute_builtin(&(cur->cmd), shell));
+	else
+		return (handle_process(shell, p, cur));
 }
 
 static int	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
