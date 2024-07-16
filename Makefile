@@ -38,6 +38,7 @@ SRCS = $(SRC_DIR)/main.c \
        $(SRC_DIR)/parser/set_redirections.c \
        $(SRC_DIR)/parser/split_line.c \
        $(SRC_DIR)/parser/split_tokens_per_command.c \
+       $(SRC_DIR)/pipe/pipe.c \
        $(SRC_DIR)/signal/signal.c \
        $(SRC_DIR)/utils/free_pipeline.c \
        $(SRC_DIR)/utils/free_shell.c \

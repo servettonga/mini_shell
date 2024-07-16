@@ -8,6 +8,9 @@ t_pipeline *create_default_pipeline_node(void)
     if (!res)
         return (NULL);
     res->next = NULL;
+	res->prev = NULL;
+	res->fd_in = 0;
+	res->fd_out = 1;
     res->cmd.args = NULL;
     res->cmd.connection_type = CON_NONE;
     res->cmd.is_heredoc = 0;

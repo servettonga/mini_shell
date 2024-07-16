@@ -12,57 +12,70 @@
 
 #include "execute.h"
 
-static int	handle_builtin(t_command *cmd, t_shell *shell);
-static int	handle_absolute_path(t_command *cmd, t_shell *shell);
-static int	handle_relative_path(t_command *cmd, t_shell *shell);
+static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static pid_t	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static pid_t	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 
-int	execute(t_pipeline *p, t_shell *shell)
+/**
+ * @brief Executes the commands in the pipeline and returns the exit status
+ * @param pipeline The pipeline to execute
+ * @param shell The shell structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ * @note This function is the entry point for executing a pipeline
+ */
+void	execute(t_pipeline *pipeline, t_shell *shell)
 {
-	t_pipeline	*current;
-	int			ret;
+	t_pipeline	*cur;
+	int			i;
+	int			cmds[MAX_CMD];
+	bool		async;
 
-	current = p;
-	ret = EXIT_SUCCESS;
-	while (current != NULL)
+	cur = pipeline;
+	i = 0;
+	if (create_pipes(pipeline) == EXIT_FAILURE)
+		return ;
+	async = is_async(pipeline);
+	while (cur != NULL)
 	{
-		if (is_builtin(&(current->cmd)))
-			ret = handle_builtin(&(current->cmd), shell);
-		else
-		{
-			if (current->cmd.args[0][0] == '/')
-				ret = handle_absolute_path(&(current->cmd), shell);
-			else
-				ret = handle_relative_path(&(current->cmd), shell);
-		}
-		current = current->next;
+		if (!async
+			&& !should_execute(cur->cmd.connection_type, shell->exit_status))
+			break ;
+		cmds[i] = find_type(shell, pipeline, cur);
+		if (!async)
+			execute_pipe(shell, cmds[i]);
+		i++;
+		cur = cur->next;
 	}
-	return (ret);
+	close_pipes(pipeline);
+	if (async)
+		execute_pipeline(shell, cmds, i);
 }
 
-static int	handle_builtin(t_command *cmd, t_shell *shell)
+static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
-	pid_t	pid;
-	int		pipe_fd[2];
-
-	if (cmd->connection_type == CON_NONE)
-		pid = execute_builtin(cmd, shell);
+	if (is_builtin(cur->cmd))
+		return (handle_builtin(shell, p, cur));
+	else if (cur->cmd.args[0][0] == '/')
+		return (absolute_path(shell, p, cur));
 	else
-	{
-		pid = handle_child_process(cmd, pipe_fd, shell);
-		if (pid < 0)
-			return (EXIT_FAILURE);
-		handle_parent_process(pid, shell);
-	}
-	return (pid);
+		return (relative_path(shell, p, cur));
 }
 
-static int	handle_absolute_path(t_command *cmd, t_shell *shell)
+static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+{
+	if (cur->cmd.connection_type != CON_NONE
+		&& (cur->cmd.infile != NULL || cur->cmd.outfile != NULL))
+		return (execute_builtin(cur->cmd, shell));
+	else
+		return (create_child(shell, p, cur));
+}
+
+static pid_t	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	struct stat	st;
-	pid_t		pid;
-	int			pipe_fd[2];
 
-	if (stat(cmd->args[0], &st) == -1)
+	if (stat(cur->cmd.args[0], &st) == -1)
 	{
 		perror("minishell: ");
 		shell->exit_status = 127;
@@ -74,30 +87,20 @@ static int	handle_absolute_path(t_command *cmd, t_shell *shell)
 		shell->exit_status = 126;
 		return (EXIT_FAILURE);
 	}
-	pid = handle_child_process(cmd, pipe_fd, shell);
-	if (pid < 0)
-		return (EXIT_FAILURE);
-	handle_parent_process(pid, shell);
-	return (EXIT_SUCCESS);
+	return (create_child(shell, p, cur));
 }
 
-static int	handle_relative_path(t_command *cmd, t_shell *shell)
+static pid_t	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	char	*cmd_path;
-	pid_t	pid;
-	int		pipe_fd[2];
 
-	cmd_path = find_sys_cmd(cmd->args[0], shell->env);
+	cmd_path = find_sys_cmd(cur->cmd.args[0], shell->env);
 	if (cmd_path == NULL)
 	{
 		shell->exit_status = 127;
 		return (EXIT_FAILURE);
 	}
-	free(cmd->args[0]);
-	cmd->args[0] = cmd_path;
-	pid = handle_child_process(cmd, pipe_fd, shell);
-	if (pid < 0)
-		return (EXIT_FAILURE);
-	handle_parent_process(pid, shell);
-	return (EXIT_SUCCESS);
+	free(cur->cmd.args[0]);
+	cur->cmd.args[0] = cmd_path;
+	return (create_child(shell, p, cur));
 }

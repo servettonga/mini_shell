@@ -117,3 +117,19 @@ static char	*check_file(char *file)
 	}
 	return (NULL);
 }
+
+/**
+ * @brief Check if a command should be executed based on the connection type
+ * and the last exit status
+ * @param conn_type The type of connection between the commands
+ * @param exit_status The exit status of the last command
+ * @return true is the command should be executed, false otherwise
+ */
+bool	should_execute(t_connection conn_type, int exit_status)
+{
+	if (conn_type == CON_AND && exit_status != EXIT_SUCCESS)
+		return (false);
+	if (conn_type == CON_OR && exit_status != EXIT_SUCCESS)
+		return (true);
+	return (true);
+}

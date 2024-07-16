@@ -40,8 +40,12 @@ t_pipeline *parse(char *line, t_env *env)
 
 static void set_pipeline_parameters(t_pipeline *node, t_env *env)
 {
+	t_pipeline   *tmp;
+
+	tmp = NULL;
 	while (node)
 	{
+		node->prev = tmp;
 		if (!node->cmd.args || !node->cmd.args[0])
 			break;
 		set_connection_type(node);
@@ -49,6 +53,7 @@ static void set_pipeline_parameters(t_pipeline *node, t_env *env)
 		replace_vars(node, env);
 		replace_wildcards(node);
 		drop_outside_quotation(node);
+		tmp = node;
 		node = node->next;
 	}
 }
@@ -56,7 +61,11 @@ static void set_pipeline_parameters(t_pipeline *node, t_env *env)
 static void set_connection_type(t_pipeline *node)
 {
 	if (!ft_memcmp(node->cmd.args[0], "|", 2))
+	{
 		node->cmd.connection_type = CON_PIPE;
+		if (node->prev && node->prev->cmd.connection_type == CON_NONE)
+			node->prev->cmd.connection_type = CON_PIPE;
+	}
 	else if (!ft_memcmp(node->cmd.args[0], "||", 3))
 		node->cmd.connection_type = CON_OR;
 	else if (!ft_memcmp(node->cmd.args[0], "&&", 3))

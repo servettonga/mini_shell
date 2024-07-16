@@ -13,13 +13,52 @@
 #include "execute.h"
 
 /**
- * @brief Handle the parent process
- * @param pid The process id
+ * @brief Creates a child process to execute the command
  * @param shell The shell structure
- * @note This function waits for the child process to finish
- * and sets the exit status of the shell
+ * @param p The pipeline of the command
+ * @param cur The current command in the pipeline to execute
+ * @return Process ID of the child process
  */
-void	handle_parent_process(pid_t pid, t_shell *shell)
+pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("minishell: Fork failed: ");
+		return (EXIT_FAILURE);
+	}
+	if (pid == 0)
+		exit(execute_command(shell, p, cur));
+	return (pid);
+}
+
+/**
+ * @brief Executes the pipeline of commands in async mode
+ * @param shell The shell structure
+ * @param cmds The array of process IDs
+ * @param num_cmds The number of commands in the pipeline
+ */
+void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds)
+{
+	int	i;
+
+	i = 0;
+	while (i < num_cmds)
+	{
+		waitpid(cmds[i], &(shell->exit_status), WUNTRACED);
+		shell->exit_status = WEXITSTATUS(shell->exit_status);
+		i++;
+	}
+}
+
+/**
+ * @brief Executes the pipeline of commands in sync mode
+ * @param shell The shell structure
+ * @param pid The process ID of the child process
+ */
+void	execute_pipe(t_shell *shell, pid_t pid)
 {
 	int	status;
 
@@ -30,26 +69,21 @@ void	handle_parent_process(pid_t pid, t_shell *shell)
 }
 
 /**
- * @brief Handle the child process
- * @param cmd The command to execute
- * @param pipefd The pipe file descriptors
- * @param env The environment variables
- * @return The process id of the child process
- * @note This function executes the command in the child process
- * and exits the child process
- * @note Signal handlers are set to default in the child process
+ * @brief Checks if the pipeline is asynchronous
+ * @param pipeline The pipeline of commands
+ * @return true if the pipeline is asynchronous, false otherwise
  */
-pid_t	handle_child_process(t_command *cmd, int pipefd[2], t_shell *shell)
+bool	is_async(t_pipeline *pipeline)
 {
-	pid_t	pid;
+	t_pipeline	*current;
 
-	pid = fork();
-	if (pid < 0)
+	current = pipeline;
+	while (current)
 	{
-		perror("minishell: Fork failed: ");
-		return (pid);
+		if (current->cmd.connection_type == CON_OR
+			|| current->cmd.connection_type == CON_AND)
+			return (false);
+		current = current->next;
 	}
-	if (pid == 0)
-		exit(execute_command(cmd, pipefd, shell));
-	return (pid);
+	return (true);
 }
