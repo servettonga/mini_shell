@@ -101,4 +101,3 @@ static int	handle_relative_path(t_command *cmd, t_shell *shell)
 	handle_parent_process(pid, shell);
 	return (EXIT_SUCCESS);
 }
-

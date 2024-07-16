@@ -22,10 +22,16 @@ void	cleanup_and_exit_shell(t_shell *shell)
 {
 	int	exit_status;
 
+	if (!shell)
+		exit(EXIT_SUCCESS);
 	exit_status = shell->exit_status;
 	if (exit_status < 0 || exit_status > 255)
 		exit_status = 255;
-	free_env(shell->env);
-	free(shell);
+	if (shell->env)
+	{
+		free_env(shell->env);
+		shell->env = NULL;
+	}
+	shell = NULL;
 	exit(exit_status);
 }

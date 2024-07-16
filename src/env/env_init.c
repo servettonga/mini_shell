@@ -44,8 +44,9 @@ int	init_environment(t_shell *shell)
 			last_node = new_node;
 			i++;
 		}
+		return (EXIT_SUCCESS);
 	}
-	return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 static int	handle_errors(t_env *new_node, char **key_value)
