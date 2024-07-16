@@ -13,13 +13,11 @@
 #include "execute.h"
 
 /**
- * @brief Handles the execution process of a command in the pipeline
+ * @brief Creates a child process to execute the command
  * @param shell The shell structure
  * @param p The pipeline of the command
  * @param cur The current command in the pipeline to execute
  * @return Process ID of the child process
- * @note This function executes the command in the child process
- * and exits the child process
  */
 pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
@@ -36,6 +34,12 @@ pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 	return (pid);
 }
 
+/**
+ * @brief Executes the pipeline of commands in async mode
+ * @param shell The shell structure
+ * @param cmds The array of process IDs
+ * @param num_cmds The number of commands in the pipeline
+ */
 void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds)
 {
 	int	i;
@@ -47,4 +51,39 @@ void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds)
 		shell->exit_status = WEXITSTATUS(shell->exit_status);
 		i++;
 	}
+}
+
+/**
+ * @brief Executes the pipeline of commands in sync mode
+ * @param shell The shell structure
+ * @param pid The process ID of the child process
+ */
+void	execute_pipe(t_shell *shell, pid_t pid)
+{
+	int	status;
+
+	waitpid(pid, &status, WUNTRACED);
+	while (!WIFEXITED(status) && !WIFSIGNALED(status))
+		waitpid(pid, &status, WUNTRACED);
+	shell->exit_status = WEXITSTATUS(status);
+}
+
+/**
+ * @brief Checks if the pipeline is asynchronous
+ * @param pipeline The pipeline of commands
+ * @return true if the pipeline is asynchronous, false otherwise
+ */
+bool	is_async(t_pipeline *pipeline)
+{
+	t_pipeline	*current;
+
+	current = pipeline;
+	while (current)
+	{
+		if (current->cmd.connection_type == CON_OR
+			|| current->cmd.connection_type == CON_AND)
+			return (false);
+		current = current->next;
+	}
+	return (true);
 }

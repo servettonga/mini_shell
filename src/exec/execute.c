@@ -12,6 +12,7 @@
 
 #include "execute.h"
 
+static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 static pid_t	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 static pid_t	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur);
@@ -28,27 +29,37 @@ void	execute(t_pipeline *pipeline, t_shell *shell)
 	t_pipeline	*cur;
 	int			i;
 	int			cmds[MAX_CMD];
+	bool		async;
 
 	cur = pipeline;
 	i = 0;
 	if (create_pipes(pipeline) == EXIT_FAILURE)
 		return ;
+	async = is_async(pipeline);
 	while (cur != NULL)
 	{
-		if (should_execute(cur->cmd.connection_type, shell->exit_status))
-		{
-			if (is_builtin(cur->cmd))
-				cmds[i] = handle_builtin(shell, pipeline, cur);
-			else if (cur->cmd.args[0][0] == '/')
-				cmds[i] = absolute_path(shell, pipeline, cur);
-			else
-				cmds[i] = relative_path(shell, pipeline, cur);
-		}
+		if (!async
+			&& !should_execute(cur->cmd.connection_type, shell->exit_status))
+			break ;
+		cmds[i] = find_type(shell, pipeline, cur);
+		if (!async)
+			execute_pipe(shell, cmds[i]);
 		i++;
 		cur = cur->next;
 	}
 	close_pipes(pipeline);
-	execute_pipeline(shell, cmds, i);
+	if (async)
+		execute_pipeline(shell, cmds, i);
+}
+
+static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+{
+	if (is_builtin(cur->cmd))
+		return (handle_builtin(shell, p, cur));
+	else if (cur->cmd.args[0][0] == '/')
+		return (absolute_path(shell, p, cur));
+	else
+		return (relative_path(shell, p, cur));
 }
 
 static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur)
