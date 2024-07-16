@@ -64,8 +64,8 @@ static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 
 static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
-	if (cur->cmd.connection_type != CON_NONE
-		&& (cur->cmd.infile != NULL || cur->cmd.outfile != NULL))
+	if (cur->next == NULL && cur->prev == NULL
+		&& (cur->cmd.infile == NULL && cur->cmd.outfile == NULL))
 		return (execute_builtin(cur->cmd, shell));
 	else
 		return (create_child(shell, p, cur));

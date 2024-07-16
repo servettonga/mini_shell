@@ -36,12 +36,11 @@ int	cmd_exit(t_shell *shell, char **args, t_connection ct)
 		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 		shell->exit_status = 255;
 	}
-	if (shell->exit_status == EXIT_SUCCESS)
-		ft_putendl_fd("exit", STDERR_FILENO);
 	if (shell->exit_status < 0)
 		shell->exit_status = 256 + shell->exit_status;
 	if (shell->exit_status > 255)
 		shell->exit_status %= 256;
+	ft_putendl_fd("exit", STDERR_FILENO);
 	if (ct == CON_NONE)
 		cleanup_and_exit_shell(shell);
 	return (shell->exit_status);
