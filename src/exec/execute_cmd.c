@@ -15,6 +15,7 @@
 static void	handle_input(t_command *cmd);
 static void	handle_output(t_command *cmd);
 static void	handle_pipe(t_pipeline *current);
+static void	handle_heredoc(t_command *cmd, pid_t pid);
 
 /**
  * @brief Execute a command
@@ -23,10 +24,11 @@ static void	handle_pipe(t_pipeline *current);
  * @param cur The current command to execute
  * @note This function executes the command in a child process
  */
-int	execute_command(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+int	exec_command(t_shell *shell, t_pipeline *p, t_pipeline *cur, pid_t pid)
 {
 	char	**env_array;
 
+	handle_heredoc(&cur->cmd, pid);
 	handle_input(&cur->cmd);
 	handle_output(&cur->cmd);
 	handle_pipe(cur);
@@ -115,4 +117,33 @@ static void	handle_pipe(t_pipeline *current)
 	}
 	if (current->next == NULL && current->prev != NULL)
 		dup2(current->prev->fd_in, STDIN_FILENO);
+}
+
+static void	handle_heredoc(t_command *cmd, pid_t pid)
+{
+	int		fd;
+	char	*line;
+
+	if (cmd->is_heredoc)
+	{
+		if (cmd->infile != NULL)
+			free(cmd->infile);
+		cmd->infile = ft_strjoin("/tmp/heredoc_pid.", ft_itoa(pid));
+		fd = open(cmd->infile, O_RDWR | O_CREAT | O_TRUNC, 0600);
+		if (fd == -1)
+		{
+			perror("minishell: open ");
+			exit(EXIT_FAILURE);
+		}
+		line = readline("heredoc> ");
+		while (line != NULL)
+		{
+			if (ft_strcmp(line, cmd->limiter) == 0)
+				break ;
+			ft_putendl_fd(line, fd);
+			free(line);
+			line = readline("heredoc> ");
+		}
+		close(fd);
+	}
 }

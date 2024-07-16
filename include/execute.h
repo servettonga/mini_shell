@@ -32,10 +32,10 @@ bool	is_async(t_pipeline *pipeline);
 bool	should_execute(t_connection conn_type, int exit_status);
 
 //		** execute command **
-int		execute_command(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+int		exec_command(t_shell *shell, t_pipeline *p, t_pipeline *cur, pid_t pid);
 pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur);
-void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds);
-void	execute_pipe(t_shell *shell, pid_t pid);
+void	exec_pipeline(t_shell *shell, int *cmds, int num_cmds);
+void	exec_pipe(t_shell *shell, pid_t pid);
 
 //		** builtin functions **
 int		cmd_cd(t_shell *shell, char **args);
