@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/08 17:20:18 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/07/10 15:51:34 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ typedef struct s_shell
 	int		exit_status;
 }	t_shell;
 
-t_pipeline	*parse(char *line, t_env *env);
+t_pipeline	*parse(char *line, t_shell *shell);
 int			init_environment(t_shell *shell);
 void		execute(t_pipeline *pipeline, t_shell *shell);
 

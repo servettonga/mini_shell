@@ -1,6 +1,6 @@
 #include "parser.h"
 
-static void set_pipeline_parameters(t_pipeline *node, t_env *env);
+static void set_pipeline_parameters(t_pipeline *node, t_shell *shell);
 static void set_connection_type(t_pipeline *node);
 static void drop_outside_quotation(t_pipeline *node);
 
@@ -23,7 +23,7 @@ Return:
 Undefined behavior:
 - multiple redirections to the same command, eg. `cmd >1.out >>2.out` or `cmd <1.txt <<LIM`
 */
-t_pipeline *parse(char *line, t_env *env)
+t_pipeline *parse(char *line, t_shell *shell)
 {
 	t_pipeline   *res;
 	char		**tokens;
@@ -34,11 +34,11 @@ t_pipeline *parse(char *line, t_env *env)
 		return (NULL);
 	split_tokens_per_command(res, tokens);
 	free_split(tokens);
-	set_pipeline_parameters(res, env);
+	set_pipeline_parameters(res, shell);
 	return (res);
 }
 
-static void set_pipeline_parameters(t_pipeline *node, t_env *env)
+static void set_pipeline_parameters(t_pipeline *node, t_shell *shell)
 {
 	t_pipeline   *tmp;
 
@@ -50,7 +50,7 @@ static void set_pipeline_parameters(t_pipeline *node, t_env *env)
 			break;
 		set_connection_type(node);
 		set_redirections(node);
-		replace_vars(node, env);
+		replace_vars(node, shell);
 		replace_wildcards(node);
 		drop_outside_quotation(node);
 		tmp = node;

@@ -3,13 +3,14 @@
 
 static int validate_var_expansion(char *arg, char *dollar);
 static char *get_var_name(char *dollar);
+static char *get_var_value(const char *name, t_shell *shell);
 
 /*
 Only 2 types of variable names are accepted:
 - $?
 - $<alphabetic characters>
 */
-void replace_vars(t_pipeline *node, t_env *env)
+void replace_vars(t_pipeline *node, t_shell *shell)
 {
 	int i;
 	char *start;
@@ -33,7 +34,7 @@ void replace_vars(t_pipeline *node, t_env *env)
 		var_name = get_var_name(start);
 		if (!var_name)
 			continue ;
-		var_value = get_env_val(env, var_name);
+		var_value = get_var_value(var_name, shell);
 		expanded = NULL;
 		if (var_value)
 			expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - 1 + ft_strlen(var_value) + 1);
@@ -48,6 +49,7 @@ void replace_vars(t_pipeline *node, t_env *env)
 			start =	NULL;
 		}
 		free(var_name);
+		free(var_value);
 	}
 }
 
@@ -106,4 +108,14 @@ static char *get_var_name(char *dollar)
 	ft_memcpy(res, dollar + 1, i - 1);
 	res[i - 1] = 0;
 	return (res);
+}
+
+static char *get_var_value(const char *name, t_shell *shell)
+{
+	char *var_value;
+
+	if (ft_memcmp(name, "?", 2) == 0)
+		return ft_itoa(shell->exit_status);
+	var_value = get_env_val(shell->env, name);
+	return (ft_strdup(var_value));
 }
