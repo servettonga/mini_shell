@@ -43,13 +43,13 @@ void	execute(t_pipeline *pipeline, t_shell *shell)
 			break ;
 		cmds[i] = find_type(shell, pipeline, cur);
 		if (!async)
-			execute_pipe(shell, cmds[i]);
+			exec_pipe(shell, cmds[i]);
 		i++;
 		cur = cur->next;
 	}
 	close_pipes(pipeline);
 	if (async)
-		execute_pipeline(shell, cmds, i);
+		exec_pipeline(shell, cmds, i);
 }
 
 static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur)

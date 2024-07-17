@@ -30,7 +30,7 @@ pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 		return (EXIT_FAILURE);
 	}
 	if (pid == 0)
-		exit(execute_command(shell, p, cur));
+		exit(exec_command(shell, p, cur, pid));
 	return (pid);
 }
 
@@ -40,7 +40,7 @@ pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
  * @param cmds The array of process IDs
  * @param num_cmds The number of commands in the pipeline
  */
-void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds)
+void	exec_pipeline(t_shell *shell, int *cmds, int num_cmds)
 {
 	int	i;
 
@@ -58,7 +58,7 @@ void	execute_pipeline(t_shell *shell, int *cmds, int num_cmds)
  * @param shell The shell structure
  * @param pid The process ID of the child process
  */
-void	execute_pipe(t_shell *shell, pid_t pid)
+void	exec_pipe(t_shell *shell, pid_t pid)
 {
 	int	status;
 
