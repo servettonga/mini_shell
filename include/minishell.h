@@ -106,6 +106,6 @@ void		free_pipeline(t_pipeline *p);
 void		interactive_signal_handlers(void);
 void		non_interactive_signal_handlers(void);
 
-# define PROMPT "(minishell) -> "
+# define PROMPT "\033[0;36mminishell\033[0m \033[0;32m> \033[0m"
 
 #endif
