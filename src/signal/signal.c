@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:54:21 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/08 18:13:46 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/07/17 21:14:24 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ void	non_interactive_signal_handlers(void)
 
 	sigemptyset(&sa_int.sa_mask);
 	sigemptyset(&sa_quit.sa_mask);
-	sigaddset(&sa_int.sa_mask, SIGQUIT);
-	sigaddset(&sa_quit.sa_mask, SIGINT);
 	sa_int.sa_handler = print_newline;
 	sa_quit.sa_handler = SIG_IGN;
 	sa_int.sa_flags = 0;
