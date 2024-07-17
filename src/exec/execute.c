@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 21:04:06 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/24 21:46:51 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 12:32:00 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	execute(t_pipeline *pipeline, t_shell *shell)
 	while (cur != NULL)
 	{
 		if (!async
-			&& !should_execute(cur->cmd.connection_type, shell->exit_status))
+			&& !should_execute(cur->cmd.conn_type, shell->exit_status))
 			break ;
 		cmds[i] = find_type(shell, pipeline, cur);
 		if (!async)
@@ -77,13 +77,13 @@ static pid_t	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 
 	if (stat(cur->cmd.args[0], &st) == -1)
 	{
-		perror("minishell: ");
+		perror(ERR_GENERIC);
 		shell->exit_status = 127;
 		return (EXIT_FAILURE);
 	}
 	if (S_ISDIR(st.st_mode))
 	{
-		ft_putendl_fd("minishell: is a directory", 2);
+		ft_putendl_fd(ERR_IS_DIR, 2);
 		shell->exit_status = 126;
 		return (EXIT_FAILURE);
 	}

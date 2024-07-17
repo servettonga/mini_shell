@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:37:41 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 21:03:35 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 11:30:10 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	cmd_cd(t_shell *shell, char **args)
 		change_to = get_env_val(shell->env, "HOME");
 		if (change_to == NULL)
 		{
-			ft_putendl_fd("minishell: cd: HOME not set", 2);
+			ft_putendl_fd(ERR_NO_HOME, 2);
 			return (EXIT_FAILURE);
 		}
 	}
@@ -43,7 +43,7 @@ int	cmd_cd(t_shell *shell, char **args)
 		old_pwd = getcwd(NULL, 0);
 	if (chdir(change_to) != 0)
 	{
-		ft_putstr_fd("minishell: cd: can't cd to ", 2);
+		ft_putstr_fd(ERR_NO_CD, 2);
 		ft_putendl_fd(change_to, 2);
 		return (free(old_pwd), EXIT_FAILURE);
 	}
@@ -52,7 +52,7 @@ int	cmd_cd(t_shell *shell, char **args)
 
 static bool	is_home_keyword(const char *arg)
 {
-	if (arg[0] == '~' && (arg[1] == '\0'))
+	if (arg[0] == '~' && arg[1] == '\0')
 		return (true);
 	else if (ft_strcmp(arg, "--") == 0)
 		return (true);
@@ -70,7 +70,7 @@ static int	update_pwd_env(t_shell *shell, char *old_pwd)
 	new_pwd = getcwd(NULL, 0);
 	if (new_pwd == NULL)
 	{
-		ft_putendl_fd("minishell: cd: error retrieving current directory", 2);
+		ft_putendl_fd(ERR_RET_CWD, 2);
 		return (free(old_pwd), EXIT_FAILURE);
 	}
 	if (set_env_var(shell->env, "OLDPWD", old_pwd) == EXIT_FAILURE)

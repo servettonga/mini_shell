@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 19:04:21 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/24 21:06:54 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 11:32:13 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ int	cmd_exit(t_shell *shell, char **args, t_connection ct)
 		shell->exit_status = EXIT_SUCCESS;
 	else if (args[2])
 	{
-		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
+		ft_putendl_fd(ERR_MANY_ARGS, STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	if (is_number(args[1]))
-		shell->exit_status = ft_atol(args[1]);
+		shell->exit_status = (signed int)ft_atol(args[1]);
 	else if (args[1] && !is_number(args[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);

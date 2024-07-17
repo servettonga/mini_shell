@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:42:49 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 21:14:07 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 11:35:00 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	**split_key_value(const char *str, char c)
 
 	result = (char **)malloc(sizeof(char *) * 3);
 	if (!result)
-		return (perror("malloc"), NULL);
+		return (perror(ERR_MALLOC), NULL);
 	index = ft_strchr(str, c);
 	if (index)
 	{

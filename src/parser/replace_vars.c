@@ -1,86 +1,122 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   replace_vars.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 09:32:14 by sehosaf           #+#    #+#             */
+/*   Updated: 2024/07/17 21:46:00 by sehosaf          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 #include "environment.h"
 
-static int validate_var_expansion(char *arg, char *dollar);
-static char *get_var_name(char *dollar);
+static int	validate_var_expansion(char *arg, const char *dollar);
+static char	*get_start(const t_pipeline *node, int i, char *start);
+static void	handle_expanded(t_pipeline *node, int i, char *start, t_env *env);
+static void	*alloc_expanded(const t_pipeline *node, int i, const char *value,
+				const char *name);
 static char *get_var_value(const char *name, t_shell *shell);
 
 /*
-Only 2 types of variable names are accepted:
-- $?
-- $<alphabetic characters>
+	Only 2 types of variable names are accepted:
+	- $?
+	- $<alphabetic characters>
 */
-void replace_vars(t_pipeline *node, t_shell *shell)
+void	replace_vars(t_pipeline *node, t_shell *shell)
 {
-	int i;
-	char *start;
-	char *var_value;
-	char *var_name;
-	char *expanded;
+	int		i;
+	char	*start;
 
 	i = 0;
-	start = NULL;
 	while (node->cmd.args[i])
 	{
-		if (!start)
-			start = ft_strchr(node->cmd.args[i], '$');
-		else
-			start = ft_strchr(start + 1, '$');
+		start = get_start(node, i, start);
 		if (!start)
 			i++;
 		if (!start || !validate_var_expansion(node->cmd.args[i], start)
 			|| !(ft_isalpha(start[1]) || start[1] == '?'))
 			continue ;
-		var_name = get_var_name(start);
-		if (!var_name)
-			continue ;
-		var_value = get_var_value(var_name, shell);
-		expanded = NULL;
-		if (var_value)
-			expanded = malloc(ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - 1 + ft_strlen(var_value) + 1);
-		if (expanded)
-		{
-			ft_memcpy(expanded, node->cmd.args[i], start - node->cmd.args[i]);
-			ft_memcpy(expanded + (start - node->cmd.args[i]), var_value, ft_strlen(var_value));
-			ft_memcpy(expanded + (start - node->cmd.args[i]) + ft_strlen(var_value), start + strlen(var_name) + 1, ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) - (start - node->cmd.args[i]) - 1);
-			expanded[ft_strlen(node->cmd.args[i]) - ft_strlen(var_name) + ft_strlen(var_value) - 1] = 0;
-			free(node->cmd.args[i]);
-			node->cmd.args[i] = expanded;
-			start =	NULL;
-		}
-		free(var_name);
-		free(var_value);
+		handle_expanded(node, i, start, env);
+		start = NULL;
 	}
 }
 
-/*
-Validates, whether variable should be replaced by it's value.
-If var is in single quotes - invalid.
-*/
-static int validate_var_expansion(char *arg, char *dollar)
+static char	*get_start(const t_pipeline *node, int i, char *start)
 {
-	char *dq;
-	char *sq;
+	if (!start)
+		start = ft_strchr(node->cmd.args[i], '$');
+	else
+		start = ft_strchr(start + 1, '$');
+	return (start);
+}
+
+static void	*alloc_expanded(const t_pipeline *node, int i, const char *value,
+			const char *name)
+{
+	return (malloc(ft_strlen(node->cmd.args[i])
+			- ft_strlen(name) - 1 + ft_strlen(value) + 1));
+}
+
+static void	handle_expanded(t_pipeline *node, int i, char *start, t_env *env)
+{
+	char			*exp;
+	char			*value;
+	char			*name;
+	unsigned long	loc;
+
+	exp = NULL;
+	name = get_var_name(start);
+	if (!name)
+		return ;
+	value = get_env_val(env, name);
+	if (value)
+		exp = alloc_expanded(node, i, value, name);
+	if (exp)
+	{
+		loc = start - node->cmd.args[i];
+		ft_memcpy(exp, node->cmd.args[i], start - node->cmd.args[i]);
+		ft_memcpy(exp + loc, value, ft_strlen(value));
+		ft_memcpy(exp + loc + ft_strlen(value), start + strlen(name)
+			+ 1, ft_strlen(node->cmd.args[i]) - ft_strlen(name) - loc - 1);
+		exp[ft_strlen(node->cmd.args[i]) - ft_strlen(name)
+			+ ft_strlen(value) - 1] = 0;
+		free(node->cmd.args[i]);
+		node->cmd.args[i] = exp;
+	}
+	free(name);
+}
+
+/*
+	Validates, whether variable should be replaced by its value.
+	If var is in single quotes - invalid.
+*/
+static int	validate_var_expansion(char *arg, const char *dollar)
+{
+	char	*dq;
+	char	*sq;
 
 	while (arg && arg < dollar)
 	{
-    	dq = ft_strchr(arg, '"');
-    	sq = ft_strchr(arg, '\'');
-    	if (sq && sq < dollar)
-    	{
-    	    if (dq && dq < sq)
-    	        arg = ft_strchr(dq + 1, '"');
-    	    else
-    	    {
-                arg = ft_strchr(sq + 1, '\'');
-                if (arg && arg > dollar)
-                    return (0);
-    	    }
-            if (arg)
-                arg++;
-    	}
-    	else
-    	    break ;
+		dq = ft_strchr(arg, '"');
+		sq = ft_strchr(arg, '\'');
+		if (sq && sq < dollar)
+		{
+			if (dq && dq < sq)
+				arg = ft_strchr(dq + 1, '"');
+			else
+			{
+				arg = ft_strchr(sq + 1, '\'');
+				if (arg && arg > dollar)
+					return (0);
+			}
+			if (arg)
+				arg++;
+		}
+		else
+			break ;
 	}
 	return (1);
 }

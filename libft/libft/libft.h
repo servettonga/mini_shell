@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:53:52 by dmoroz            #+#    #+#             */
-/*   Updated: 2024/06/12 10:32:48 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 20:42:46 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ size_t				ft_strlcat(char *dst, const char *src, size_t size);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *str, const char *sub, size_t len);
-int 				ft_strcmp(const char *s1, const char *s2);
-int 				ft_strncmp(const char *s1, const char *s2, size_t n);
+int					ft_strcmp(const char *s1, const char *s2);
+int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_atoi(const char *str);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);
 char				*ft_substr(char const *s, unsigned int start, size_t len);

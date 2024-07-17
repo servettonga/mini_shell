@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:56:55 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/12 16:56:56 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 12:50:07 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ int	create_pipes(t_pipeline *pipeline)
 	i = 0;
 	while (current)
 	{
-		if (current->cmd.connection_type == CON_PIPE)
+		if (current->cmd.conn_type == CON_PIPE)
 		{
 			if (pipe(pipefd[i]) == -1)
-				return (perror("minishell: pipe error: "), EXIT_FAILURE);
+				return (perror(ERR_PIPE), EXIT_FAILURE);
 			current->fd_in = pipefd[i][0];
 			current->fd_out = pipefd[i][1];
 			i++;
@@ -47,14 +47,14 @@ int	create_pipes(t_pipeline *pipeline)
  * as argument
  * @param p The pipeline to close the file descriptors for
  */
-void close_pipes(t_pipeline *p)
+void	close_pipes(t_pipeline *p)
 {
 	t_pipeline	*current;
 
 	current = p;
 	while (current)
 	{
-		if (current->cmd.connection_type == CON_PIPE)
+		if (current->cmd.conn_type == CON_PIPE)
 		{
 			close(current->fd_in);
 			close(current->fd_out);

@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:25:20 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/23 21:31:23 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 12:44:41 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	*find_sys_cmd(char *cmd, t_env *env)
 		}
 	}
 	free_split(path_dirs);
-	printf("minishell: %s: not found\n", cmd);
+	printf("%s%s: not found\n", ERR_GENERIC, cmd);
 	return (NULL);
 }
 
@@ -113,7 +113,7 @@ static char	*check_file(char *file)
 		if (access(file, X_OK) == 0)
 			return (ft_strdup(file));
 		else
-			printf("minishell: %d: %s: Permission denied\n", errno, file);
+			printf("%s%d: %s: %s\n", ERR_GENERIC, errno, file, ERR_PERM);
 	}
 	return (NULL);
 }

@@ -1,29 +1,42 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 09:35:57 by sehosaf           #+#    #+#             */
+/*   Updated: 2024/07/17 11:24:24 by sehosaf          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int main(void)
+int	main(void)
 {
-    char * line;
-    t_pipeline *p;
-    t_shell shell;
+	char		*line;
+	t_pipeline	*p;
+	t_shell		shell;
 
-    init_environment(&shell);
-    while (1)
-    {
+	if (init_environment(&shell) == EXIT_FAILURE)
+		exit(EXIT_FAILURE);
+	while (1)
+	{
 		interactive_signal_handlers();
-        line = readline(PROMPT);
+		line = readline(PROMPT);
 		non_interactive_signal_handlers();
-        if (!line)
-            exit(EXIT_SUCCESS);
-        if (!*line)
-        {
-            free(line);
-            continue ;
-        }
-        add_history(line);
-        p = parse(line, &shell);
-        free(line);
-        if (validate_pipeline(p) == EXIT_SUCCESS)
-            execute(p, &shell);
-        free_pipeline(p);
-    }
+		if (!line)
+			exit(EXIT_SUCCESS);
+		if (!*line)
+		{
+			free(line);
+			continue ;
+		}
+		add_history(line);
+		p = parse(line, shell.env);
+		free(line);
+		if (validate_pipeline(p) == EXIT_SUCCESS)
+			execute(p, &shell);
+		free_pipeline(p);
+	}
 }

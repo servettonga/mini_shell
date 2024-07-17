@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:29:30 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/24 21:42:11 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 12:41:16 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 	pid = fork();
 	if (pid < 0)
 	{
-		perror("minishell: Fork failed: ");
+		perror(ERR_FORK);
 		return (EXIT_FAILURE);
 	}
 	if (pid == 0)
@@ -80,8 +80,8 @@ bool	is_async(t_pipeline *pipeline)
 	current = pipeline;
 	while (current)
 	{
-		if (current->cmd.connection_type == CON_OR
-			|| current->cmd.connection_type == CON_AND)
+		if (current->cmd.conn_type == CON_OR
+			|| current->cmd.conn_type == CON_AND)
 			return (false);
 		current = current->next;
 	}

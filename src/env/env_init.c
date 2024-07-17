@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 21:34:34 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/08 16:12:38 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/07/17 11:35:20 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	handle_errors(t_env *new_node, char **key_value)
 	}
 	if (new_node == NULL)
 	{
-		perror("malloc");
+		perror(ERR_MALLOC);
 		ret = EXIT_FAILURE;
 	}
 	if (key_value)

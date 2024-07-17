@@ -47,7 +47,7 @@ int	execute_builtin(t_command command, t_shell *shell)
 	t_connection	connection_type;
 
 	ret = EXIT_SUCCESS;
-	connection_type = command.connection_type;
+	connection_type = command.conn_type;
 	cmd_name = command.args[0];
 	if (ft_strcmp(cmd_name, "cd") == 0)
 		ret = cmd_cd(shell, command.args);
