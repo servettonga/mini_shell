@@ -6,11 +6,12 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:28:38 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 21:45:46 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 10:27:36 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "environment.h"
 
 void	remove_cmd_arg(t_pipeline *node, int ind)
 {
@@ -45,4 +46,14 @@ char	*get_var_name(char *dollar)
 	ft_memcpy(res, dollar + 1, i - 1);
 	res[i - 1] = 0;
 	return (res);
+}
+
+char	*get_var_value(const char *name, t_shell *shell)
+{
+	char	*var_value;
+
+	if (ft_memcmp(name, "?", 2) == 0)
+		return (ft_itoa(shell->exit_status));
+	var_value = get_env_val(shell->env, name);
+	return (ft_strdup(var_value));
 }

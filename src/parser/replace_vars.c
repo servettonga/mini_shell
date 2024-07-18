@@ -6,19 +6,17 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 09:32:14 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 21:46:00 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 10:31:38 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-#include "environment.h"
 
 static int	validate_var_expansion(char *arg, const char *dollar);
 static char	*get_start(const t_pipeline *node, int i, char *start);
-static void	handle_expanded(t_pipeline *node, int i, char *start, t_env *env);
+static void	handle_expanded(t_pipeline *node, int i, char *start, t_shell *sh);
 static void	*alloc_expanded(const t_pipeline *node, int i, const char *value,
 				const char *name);
-static char *get_var_value(const char *name, t_shell *shell);
 
 /*
 	Only 2 types of variable names are accepted:
@@ -39,7 +37,7 @@ void	replace_vars(t_pipeline *node, t_shell *shell)
 		if (!start || !validate_var_expansion(node->cmd.args[i], start)
 			|| !(ft_isalpha(start[1]) || start[1] == '?'))
 			continue ;
-		handle_expanded(node, i, start, env);
+		handle_expanded(node, i, start, shell);
 		start = NULL;
 	}
 }
@@ -56,11 +54,13 @@ static char	*get_start(const t_pipeline *node, int i, char *start)
 static void	*alloc_expanded(const t_pipeline *node, int i, const char *value,
 			const char *name)
 {
+	if (value == NULL)
+		return (NULL);
 	return (malloc(ft_strlen(node->cmd.args[i])
 			- ft_strlen(name) - 1 + ft_strlen(value) + 1));
 }
 
-static void	handle_expanded(t_pipeline *node, int i, char *start, t_env *env)
+static void	handle_expanded(t_pipeline *node, int i, char *start, t_shell *sh)
 {
 	char			*exp;
 	char			*value;
@@ -71,9 +71,8 @@ static void	handle_expanded(t_pipeline *node, int i, char *start, t_env *env)
 	name = get_var_name(start);
 	if (!name)
 		return ;
-	value = get_env_val(env, name);
-	if (value)
-		exp = alloc_expanded(node, i, value, name);
+	value = get_var_value(name, sh);
+	exp = alloc_expanded(node, i, value, name);
 	if (exp)
 	{
 		loc = start - node->cmd.args[i];
@@ -85,8 +84,9 @@ static void	handle_expanded(t_pipeline *node, int i, char *start, t_env *env)
 			+ ft_strlen(value) - 1] = 0;
 		free(node->cmd.args[i]);
 		node->cmd.args[i] = exp;
+		free(name);
+		free(value);
 	}
-	free(name);
 }
 
 /*
@@ -119,39 +119,4 @@ static int	validate_var_expansion(char *arg, const char *dollar)
 			break ;
 	}
 	return (1);
-}
-
-/*
-Returns variable name. Result is dynamicly allocated and should be freed.
-Input - pointer on `$` (char before variable name)
-*/
-static char *get_var_name(char *dollar)
-{
-	char *res;
-	int i;
-
-	if (dollar[1] == '?')
-		i = 2;
-	else
-	{
-		i = 1;
-		while (ft_isalpha(dollar[i]))
-			i++;
-	}
-	res = malloc(i);
-	if (!res)
-		return (NULL);
-	ft_memcpy(res, dollar + 1, i - 1);
-	res[i - 1] = 0;
-	return (res);
-}
-
-static char *get_var_value(const char *name, t_shell *shell)
-{
-	char *var_value;
-
-	if (ft_memcmp(name, "?", 2) == 0)
-		return ft_itoa(shell->exit_status);
-	var_value = get_env_val(shell->env, name);
-	return (ft_strdup(var_value));
 }

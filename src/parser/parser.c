@@ -6,15 +6,15 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 09:15:45 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 12:46:44 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 10:27:07 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static void set_pipeline_parameters(t_pipeline *node, t_shell *shell);
-static void set_connection_type(t_pipeline *node);
-static void drop_outside_quotation(t_pipeline *node);
+static void	set_pipeline_parameters(t_pipeline *node, t_shell *shell);
+static void	set_connection_type(t_pipeline *node);
+static void	drop_outside_quotation(t_pipeline *node);
 
 /*
 	Main API for parsing part of the programm
@@ -36,7 +36,7 @@ static void drop_outside_quotation(t_pipeline *node);
 	- multiple redirections to the same command, eg. `cmd >1.out >>2.out`
  	or `cmd <1.txt <<LIM`
 */
-t_pipeline *parse(char *line, t_shell *shell)
+t_pipeline	*parse(char *line, t_shell *shell)
 {
 	t_pipeline	*res;
 	char		**tokens;
@@ -51,7 +51,7 @@ t_pipeline *parse(char *line, t_shell *shell)
 	return (res);
 }
 
-static void set_pipeline_parameters(t_pipeline *node, t_shell *shell)
+static void	set_pipeline_parameters(t_pipeline *node, t_shell *shell)
 {
 	t_pipeline	*tmp;
 
