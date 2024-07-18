@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:28:38 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/18 20:44:17 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 21:39:45 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,30 +22,27 @@ static int	set_redir(t_pipeline *nd, int i, char **s_field, int ck_char);
 int	set_redirections(t_pipeline *node)
 {
 	int	i;
+	int	res;
 
 	i = 0;
+	res = 0;
 	while (node->cmd.args[i])
 	{
 		if (node->cmd.args[i][0] == '<')
 		{
 			if (node->cmd.args[i][1] == '<')
-			{
-				if (set_redir(node, i, &node->cmd.limiter, 2))
-					return (1);
-			}
+				res = set_redir(node, i, &node->cmd.limiter, 2);
 			else
-				set_redir(node, i, &node->cmd.infile, 1);
+				res = set_redir(node, i, &node->cmd.infile, 1);
 		}
 		else if (node->cmd.args[i][0] == '>')
-		{
-			if (node->cmd.args[i][1] == '>')
-				node->cmd.ap_mode = 1;
-			set_redir(node, i, &node->cmd.outfile, 1 + node->cmd.ap_mode);
-		}
+			res = set_redir(node, i, &node->cmd.outfile, 1 + node->cmd.ap_mode);
 		else
 			i++;
+		if (res)
+			return (res);
 	}
-	return (0);
+	return (res);
 }
 
 static int	set_redir(t_pipeline *nd, int i, char **s_field, int ck_char)
@@ -55,11 +52,14 @@ static int	set_redir(t_pipeline *nd, int i, char **s_field, int ck_char)
 	if (!nd->cmd.args[i + 1])
 	{
 		ft_putstr_fd(ERR_SNX_TOKEN, STDERR_FILENO);
-		ft_putendl_fd(nd->cmd.args[i], STDERR_FILENO);
+		ft_putstr_fd(nd->cmd.args[i], STDERR_FILENO);
+		ft_putendl_fd("`", STDERR_FILENO);
 		return (1);
 	}
 	if (nd->cmd.args[i][1] == '<')
 		nd->cmd.is_heredoc = 1;
+	if (nd->cmd.args[i][1] == '>')
+		nd->cmd.ap_mode = 1;
 	arg = nd->cmd.args[i];
 	if (arg[ck_char] == 0)
 	{
