@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
+/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 21:34:34 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 11:35:20 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 15:07:15 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,22 @@ int	init_environment(t_shell *shell)
 	t_env		*last_node;
 	int			i;
 
-	if (shell && shell->env == NULL)
+	shell->env = NULL;
+	i = 0;
+	while (environ[i])
 	{
-		i = 0;
-		while (environ[i])
-		{
-			key_value = split_key_value(environ[i], '=');
-			new_node = create_env_node(key_value);
-			if (handle_errors(new_node, key_value) == EXIT_FAILURE)
-				return (EXIT_FAILURE);
-			if (i == 0)
-				shell->env = new_node;
-			else
-				last_node->next = new_node;
-			last_node = new_node;
-			i++;
-		}
-		return (EXIT_SUCCESS);
+		key_value = split_key_value(environ[i], '=');
+		new_node = create_env_node(key_value);
+		if (handle_errors(new_node, key_value) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+		if (i == 0)
+			shell->env = new_node;
+		else
+			last_node->next = new_node;
+		last_node = new_node;
+		i++;
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 static int	handle_errors(t_env *new_node, char **key_value)

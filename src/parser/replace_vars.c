@@ -6,14 +6,13 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 09:32:14 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/18 10:31:38 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 14:01:25 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
 static int	validate_var_expansion(char *arg, const char *dollar);
-static char	*get_start(const t_pipeline *node, int i, char *start);
 static void	handle_expanded(t_pipeline *node, int i, char *start, t_shell *sh);
 static void	*alloc_expanded(const t_pipeline *node, int i, const char *value,
 				const char *name);
@@ -29,9 +28,13 @@ void	replace_vars(t_pipeline *node, t_shell *shell)
 	char	*start;
 
 	i = 0;
+	start = NULL;
 	while (node->cmd.args[i])
 	{
-		start = get_start(node, i, start);
+		if (!start)
+			start = ft_strchr(node->cmd.args[i], '$');
+		else
+			start = ft_strchr(start + 1, '$');
 		if (!start)
 			i++;
 		if (!start || !validate_var_expansion(node->cmd.args[i], start)
@@ -40,15 +43,6 @@ void	replace_vars(t_pipeline *node, t_shell *shell)
 		handle_expanded(node, i, start, shell);
 		start = NULL;
 	}
-}
-
-static char	*get_start(const t_pipeline *node, int i, char *start)
-{
-	if (!start)
-		start = ft_strchr(node->cmd.args[i], '$');
-	else
-		start = ft_strchr(start + 1, '$');
-	return (start);
 }
 
 static void	*alloc_expanded(const t_pipeline *node, int i, const char *value,
