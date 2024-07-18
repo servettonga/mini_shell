@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 09:35:57 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/18 14:09:23 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 16:41:09 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	main(void)
 		add_history(line);
 		p = parse(line, &shell);
 		free(line);
-		if (validate_pipeline(p) == EXIT_SUCCESS)
+		if (p && validate_pipeline(p) == EXIT_SUCCESS)
 			execute(p, &shell);
 		free_pipeline(p);
 	}

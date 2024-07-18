@@ -6,13 +6,13 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 09:15:45 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/18 10:27:07 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 17:20:24 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static void	set_pipeline_parameters(t_pipeline *node, t_shell *shell);
+static int	set_pipeline_parameters(t_pipeline *node, t_shell *shell);
 static void	set_connection_type(t_pipeline *node);
 static void	drop_outside_quotation(t_pipeline *node);
 
@@ -47,11 +47,15 @@ t_pipeline	*parse(char *line, t_shell *shell)
 		return (NULL);
 	split_tokens_per_command(res, tokens);
 	free_split(tokens);
-	set_pipeline_parameters(res, shell);
+	if (set_pipeline_parameters(res, shell))
+	{
+		free_pipeline(res);
+		return (NULL);
+	}
 	return (res);
 }
 
-static void	set_pipeline_parameters(t_pipeline *node, t_shell *shell)
+static int	set_pipeline_parameters(t_pipeline *node, t_shell *shell)
 {
 	t_pipeline	*tmp;
 
@@ -62,13 +66,15 @@ static void	set_pipeline_parameters(t_pipeline *node, t_shell *shell)
 		if (!node->cmd.args || !node->cmd.args[0])
 			break ;
 		set_connection_type(node);
-		set_redirections(node);
+		if (set_redirections(node))
+			return (1);
 		replace_vars(node, shell);
 		replace_wildcards(node);
 		drop_outside_quotation(node);
 		tmp = node;
 		node = node->next;
 	}
+	return (0);
 }
 
 static void	set_connection_type(t_pipeline *node)

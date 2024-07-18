@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:21:05 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 19:06:26 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/18 21:05:21 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # define PROMPT "\033[0;36mminishell\033[0m \033[0;32m> \033[0m"
 
 //		** Error messages **
-# define ERR_GENERIC "\033[0;31m Error minishell \033[0m"
+# define ERR_GENERIC "\033[0;31mError: \033[0m"
 # define ERR_MALLOC "minishell: malloc failed"
 # define ERR_PERM "Permission denied"
 
