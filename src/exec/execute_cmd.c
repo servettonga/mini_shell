@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:28:19 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/24 21:40:23 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 14:18:33 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ int	exec_command(t_shell *shell, t_pipeline *p, t_pipeline *cur, pid_t pid)
 	env_array = env_list_to_array(shell->env);
 	if (env_array == NULL)
 	{
-		ft_putendl_fd("minishell: environment list is empty", 2);
+		ft_putendl_fd(ERR_ENV, 2);
 		return (EXIT_FAILURE);
 	}
 	if (execve(cur->cmd.args[0], cur->cmd.args, env_array) == -1)
 	{
 		free_split(env_array);
-		return (perror("minishell: "), EXIT_FAILURE);
+		return (perror(ERR_EXEC), EXIT_FAILURE);
 	}
 	free_split(env_array);
 	return (EXIT_SUCCESS);
@@ -63,12 +63,12 @@ static void	handle_input(t_command *cmd)
 		in = open(cmd->infile, O_RDONLY);
 		if (in < 0)
 		{
-			perror("minishell: input file error: ");
+			perror(ERR_INPUT_FILE);
 			exit(EXIT_FAILURE);
 		}
 		if (dup2(in, STDIN_FILENO) < 0)
 		{
-			perror("minishell: input file error: ");
+			perror(ERR_INPUT_FILE);
 			close(in);
 			exit(EXIT_FAILURE);
 		}
@@ -87,18 +87,18 @@ static void	handle_output(t_command *cmd)
 
 	if (cmd->outfile != NULL)
 	{
-		if (cmd->outfile_append_mode)
+		if (cmd->ap_mode)
 			out = open(cmd->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
 			out = open(cmd->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (out < 0)
 		{
-			perror("minishell: output file error: ");
+			perror(ERR_OUTPUT_FILE);
 			exit(EXIT_FAILURE);
 		}
 		if (dup2(out, STDOUT_FILENO) < 0)
 		{
-			perror("minishell: output file error: ");
+			perror(ERR_OUTPUT_FILE);
 			close(out);
 			exit(EXIT_FAILURE);
 		}

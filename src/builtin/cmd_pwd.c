@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:08:08 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/06/19 20:53:20 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/17 11:33:39 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	cmd_pwd(void)
 
 	if (getcwd(cwd, PATH_MAX) == NULL)
 	{
-		ft_putendl_fd("minishell: pwd: error", STDERR_FILENO);
+		ft_putendl_fd(ERR_PWD, STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	return (ft_putendl_fd(cwd, STDOUT_FILENO), EXIT_SUCCESS);

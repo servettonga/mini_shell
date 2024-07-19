@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/10 15:51:34 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/07/17 14:23:21 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <stdbool.h>
 # include <limits.h>
 # include "libft.h"
+# include "messages.h"
 
 /*
 t_command struct represent command which has to be executed
@@ -59,12 +60,12 @@ typedef enum e_connection
 typedef struct s_command
 {
 	char			**args;
-	t_connection	connection_type;
+	t_connection	conn_type;
 	int				is_heredoc;
 	char			*limiter;
 	char			*infile;
 	char			*outfile;
-	int				outfile_append_mode;
+	int				ap_mode;
 }	t_command;
 
 typedef struct s_pipeline
@@ -105,7 +106,5 @@ void		free_pipeline(t_pipeline *p);
 //			** signal handlers **
 void		interactive_signal_handlers(void);
 void		non_interactive_signal_handlers(void);
-
-# define PROMPT "\033[0;36mminishell\033[0m \033[0;32m> \033[0m"
 
 #endif

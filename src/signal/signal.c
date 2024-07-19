@@ -30,9 +30,9 @@ void	non_interactive_signal_handlers(void)
 	sa_int.sa_flags = 0;
 	sa_quit.sa_flags = 0;
 	if (sigaction(SIGINT, &sa_int, NULL))
-		perror("minishell: sigaction: SIGINT ");
+		perror(ERR_SIGINT);
 	if (sigaction(SIGQUIT, &sa_quit, NULL))
-		perror("minishell: sigaction: SIGQUIT ");
+		perror(ERR_SIGQUIT);
 }
 
 /**
@@ -53,9 +53,9 @@ void	interactive_signal_handlers(void)
 	sa_int.sa_flags = 0;
 	sa_quit.sa_flags = 0;
 	if (sigaction(SIGINT, &sa_int, NULL))
-		perror("minishell: sigaction: SIGINT ");
+		perror(ERR_SIGINT);
 	if (sigaction(SIGQUIT, &sa_quit, NULL))
-		perror("minishell: sigaction: SIGQUIT ");
+		perror(ERR_SIGQUIT);
 }
 
 /**

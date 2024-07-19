@@ -32,7 +32,7 @@ SRCS = $(SRC_DIR)/main.c \
        $(SRC_DIR)/exec/execute_utils.c \
        $(SRC_DIR)/parser/create_default_pipeline_node.c \
        $(SRC_DIR)/parser/parser.c \
-       $(SRC_DIR)/parser/remove_cmd_arg.c \
+       $(SRC_DIR)/parser/parser_utils.c \
        $(SRC_DIR)/parser/replace_vars.c \
        $(SRC_DIR)/parser/replace_wildcards.c \
        $(SRC_DIR)/parser/set_redirections.c \
@@ -54,6 +54,7 @@ OBJS = $(SRCS:.c=.o)
 # Include files
 INCS = $(INC_DIR)/environment.h \
        $(INC_DIR)/execute.h \
+       $(INC_DIR)/messages.h \
        $(INC_DIR)/minishell.h \
        $(INC_DIR)/parser.h \
        $(INC_DIR)/signals.h \
