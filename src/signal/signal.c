@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
+/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:54:21 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 21:14:24 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/07/27 13:49:59 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	non_interactive_signal_handlers(void)
 	sigemptyset(&sa_int.sa_mask);
 	sigemptyset(&sa_quit.sa_mask);
 	sa_int.sa_handler = print_newline;
-	sa_quit.sa_handler = SIG_IGN;
+	sa_quit.sa_handler = print_newline;
 	sa_int.sa_flags = 0;
 	sa_quit.sa_flags = 0;
 	if (sigaction(SIGINT, &sa_int, NULL))
@@ -76,6 +76,7 @@ void	sigint_handler(int signum)
  */
 void	print_newline(int signal)
 {
-	(void)signal;
+	if (signal == SIGQUIT)
+		printf("Quit\n");
 	rl_on_new_line();
 }
