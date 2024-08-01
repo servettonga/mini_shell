@@ -6,16 +6,18 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 21:04:06 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 12:32:00 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/30 21:51:44 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+static pid_t	find_exec_type(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 static pid_t	absolute_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 static pid_t	relative_path(t_shell *shell, t_pipeline *p, t_pipeline *cur);
 static pid_t	handle_builtin(t_shell *shell, t_pipeline *p, t_pipeline *cur);
+
+pid_t	g_pids[MAX_CMD];
 
 /**
  * @brief Executes the commands in the pipeline and returns the exit status
@@ -28,7 +30,6 @@ void	execute(t_pipeline *pipeline, t_shell *shell)
 {
 	t_pipeline	*cur;
 	int			i;
-	int			cmds[MAX_CMD];
 	bool		async;
 
 	cur = pipeline;
@@ -41,18 +42,18 @@ void	execute(t_pipeline *pipeline, t_shell *shell)
 		if (!async
 			&& !should_execute(cur->cmd.conn_type, shell->exit_status))
 			break ;
-		cmds[i] = find_type(shell, pipeline, cur);
+		g_pids[i] = find_exec_type(shell, pipeline, cur);
 		if (!async)
-			exec_pipe(shell, cmds[i]);
+			wait_for_child_process(shell, g_pids[i]);
 		i++;
 		cur = cur->next;
 	}
 	close_pipes(pipeline);
 	if (async)
-		exec_pipeline(shell, cmds, i);
+		exec_pipeline(shell, i);
 }
 
-static pid_t	find_type(t_shell *shell, t_pipeline *p, t_pipeline *cur)
+static pid_t	find_exec_type(t_shell *shell, t_pipeline *p, t_pipeline *cur)
 {
 	if (is_builtin(cur->cmd))
 		return (handle_builtin(shell, p, cur));

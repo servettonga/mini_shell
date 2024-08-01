@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:21:05 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/18 21:05:21 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/08/01 18:36:35 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@
 //		** Signals messages **
 # define ERR_SIGINT "minishell: sigaction: SIGINT "
 # define ERR_SIGQUIT "minishell: sigaction: SIGQUIT "
+# define ERR_KILL "minishell: kill"
 
 #endif

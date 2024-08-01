@@ -6,11 +6,14 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:29:30 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 12:41:16 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/08/01 18:39:44 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include "signals.h"
+
+extern int	g_pids[MAX_CMD];
 
 /**
  * @brief Creates a child process to execute the command
@@ -40,15 +43,19 @@ pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur)
  * @param cmds The array of process IDs
  * @param num_cmds The number of commands in the pipeline
  */
-void	exec_pipeline(t_shell *shell, int *cmds, int num_cmds)
+void	exec_pipeline(t_shell *shell, int num_cmds)
 {
 	int	i;
+	int	status;
 
 	i = 0;
 	while (i < num_cmds)
 	{
-		waitpid(cmds[i], &(shell->exit_status), WUNTRACED);
-		shell->exit_status = WEXITSTATUS(shell->exit_status);
+		waitpid(g_pids[i], &(status), WUNTRACED);
+		if (WEXITSTATUS(status))
+			shell->exit_status = WEXITSTATUS(status);
+		if (WIFSIGNALED(status))
+			shell->exit_status = WTERMSIG(status);
 		i++;
 	}
 }
@@ -58,14 +65,17 @@ void	exec_pipeline(t_shell *shell, int *cmds, int num_cmds)
  * @param shell The shell structure
  * @param pid The process ID of the child process
  */
-void	exec_pipe(t_shell *shell, pid_t pid)
+void	wait_for_child_process(t_shell *shell, pid_t pid)
 {
 	int	status;
 
 	waitpid(pid, &status, WUNTRACED);
 	while (!WIFEXITED(status) && !WIFSIGNALED(status))
 		waitpid(pid, &status, WUNTRACED);
-	shell->exit_status = WEXITSTATUS(status);
+	if (WEXITSTATUS(status))
+		shell->exit_status = WEXITSTATUS(status);
+	if (WIFSIGNALED(status))
+		shell->exit_status = WTERMSIG(status);
 }
 
 /**

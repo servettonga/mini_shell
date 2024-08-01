@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
+/*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:37:44 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/17 14:23:21 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/08/01 18:40:39 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ typedef struct s_shell
 	t_env	*env;
 	int		exit_status;
 }	t_shell;
+
+# define MAX_CMD 1024
 
 t_pipeline	*parse(char *line, t_shell *shell);
 int			init_environment(t_shell *shell);

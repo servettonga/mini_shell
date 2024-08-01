@@ -6,7 +6,7 @@
 /*   By: sehosaf <sehosaf@student.42warsaw.pl>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 09:03:18 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/03 11:10:35 by sehosaf          ###   ########.fr       */
+/*   Updated: 2024/07/30 17:11:57 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,5 @@
 # include <features.h>
 # include <signal.h>
 # include "minishell.h"
-
-//		** signal handlers **
-void	print_newline(int signum);
-void	sigint_handler(int signum);
 
 #endif

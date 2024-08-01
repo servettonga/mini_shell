@@ -6,7 +6,7 @@
 /*   By: dmoroz <dmoroz@student.42warsaw.pl>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 21:18:00 by sehosaf           #+#    #+#             */
-/*   Updated: 2024/07/08 16:11:09 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/08/01 18:17:12 by sehosaf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ bool	should_execute(t_connection conn_type, int exit_status);
 //		** execute command **
 int		exec_command(t_shell *shell, t_pipeline *p, t_pipeline *cur, pid_t pid);
 pid_t	create_child(t_shell *shell, t_pipeline *p, t_pipeline *cur);
-void	exec_pipeline(t_shell *shell, int *cmds, int num_cmds);
-void	exec_pipe(t_shell *shell, pid_t pid);
+void	exec_pipeline(t_shell *shell, int num_cmds);
+void	wait_for_child_process(t_shell *shell, pid_t pid);
 
 //		** builtin functions **
 int		cmd_cd(t_shell *shell, char **args);
@@ -49,7 +49,5 @@ int		cmd_unset(t_shell *shell, const char *key);
 //		** redirection **
 int		create_pipes(t_pipeline *pipeline);
 void	close_pipes(t_pipeline *p);
-
-# define MAX_CMD 1024
 
 #endif
